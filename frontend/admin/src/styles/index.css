@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink-900 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+
+  /* Visible keyboard focus everywhere — never suppressed for mouse-only styling */
+  :focus-visible {
+    outline: 2px solid theme('colors.gold.DEFAULT');
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Signature element: the price tag. A small die-cut notch (via the `tag`
+     border-radius token) plus a punched "hole" dot, echoing a physical
+     market price tag. Used anywhere a price or discount is shown. */
+  .price-tag {
+    @apply relative inline-flex items-center gap-1 rounded-tag bg-gold-50
+      px-2.5 py-1 font-tag text-sm font-semibold text-ink-900;
+  }
+
+  .price-tag::before {
+    content: '';
+    @apply absolute -left-1 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full
+      bg-paper ring-1 ring-gold-400;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,319 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+  users     User[]
+
+  @@map("roles")
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  roleId           Int        @default(1) @map("role_id")
+  firstName        String     @map("first_name") @db.VarChar(100)
+  lastName         String     @map("last_name") @db.VarChar(100)
+  email            String     @unique @db.VarChar(150)
+  phone            String?    @unique @db.VarChar(20)
+  passwordHash     String     @map("password_hash") @db.VarChar(255)
+  isActive         Boolean    @default(true) @map("is_active")
+  emailVerifiedAt  DateTime?  @map("email_verified_at")
+  refreshTokenHash String?    @map("refresh_token_hash") @db.VarChar(255)
+  deletedAt        DateTime?  @map("deleted_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  role             Role       @relation(fields: [roleId], references: [id])
+  addresses        Address[]
+  cart             Cart?
+  wishlistItems    WishlistItem[]
+  orders           Order[]
+  statusChanges    OrderStatusHistory[]
+
+  @@index([roleId])
+  @@map("users")
+}
+
+model Address {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @map("user_id")
+  label          String?  @db.VarChar(50)
+  recipientName  String   @map("recipient_name") @db.VarChar(150)
+  phone          String   @db.VarChar(20)
+  cityId         Int      @map("city_id")
+  street         String   @db.VarChar(255)
+  landmark       String?  @db.VarChar(255)
+  isDefault      Boolean  @default(false) @map("is_default")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveryZone   DeliveryZone  @relation(fields: [cityId], references: [id])
+  orders         Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Vendor {
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(150)
+  slug           String   @unique @db.VarChar(150)
+  logoUrl        String?  @map("logo_url") @db.VarChar(500)
+  commissionRate Decimal  @default(0.00) @map("commission_rate") @db.Decimal(5, 2)
+  status         VendorStatus @default(active)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  products       Product[]
+  orderItems     OrderItem[]
+
+  @@map("vendors")
+}
+
+enum VendorStatus {
+  active
+  suspended
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(100)
+  slug      String     @unique @db.VarChar(120)
+  parentId  Int?       @map("parent_id")
+  imageUrl  String?    @map("image_url") @db.VarChar(500)
+  isActive  Boolean    @default(true) @map("is_active")
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  parent    Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToSubcategory")
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             Int      @id @default(autoincrement())
+  vendorId       Int      @default(1) @map("vendor_id")
+  categoryId     Int      @map("category_id")
+  name           String   @db.VarChar(255)
+  slug           String   @unique @db.VarChar(255)
+  description    String   @db.Text
+  price          Decimal  @db.Decimal(10, 2)
+  discountPrice  Decimal? @map("discount_price") @db.Decimal(10, 2)
+  sku            String   @unique @db.VarChar(100)
+  stockQuantity  Int      @default(0) @map("stock_quantity")
+  brand          String?  @db.VarChar(100)
+  isActive       Boolean  @default(true) @map("is_active")
+  isFeatured     Boolean  @default(false) @map("is_featured")
+  ratingAvg      Decimal  @default(0.00) @map("rating_avg") @db.Decimal(3, 2)
+  deletedAt      DateTime? @map("deleted_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  vendor         Vendor          @relation(fields: [vendorId], references: [id])
+  category       Category        @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
+  cartItems      CartItem[]
+  wishlistItems  WishlistItem[]
+  orderItems     OrderItem[]
+  reviews        Review[]
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([vendorId])
+  @@index([isActive])
+  @@map("products")
+}
+
+model ProductImage {
+  id                  Int     @id @default(autoincrement())
+  productId           Int     @map("product_id")
+  imageUrl            String  @map("image_url") @db.VarChar(500)
+  cloudinaryPublicId  String  @map("cloudinary_public_id") @db.VarChar(255)
+  isPrimary           Boolean @default(false) @map("is_primary")
+  sortOrder           Int     @default(0) @map("sort_order")
+
+  product             Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model DeliveryZone {
+  id                    Int      @id @default(autoincrement())
+  cityName              String   @unique @map("city_name") @db.VarChar(100)
+  region                String?  @db.VarChar(100)
+  payOnDeliveryEnabled  Boolean  @default(false) @map("pay_on_delivery_enabled")
+  deliveryFee           Decimal  @default(0.00) @map("delivery_fee") @db.Decimal(8, 2)
+  estimatedDays         String?  @map("estimated_days") @db.VarChar(20)
+  isActive              Boolean  @default(true) @map("is_active")
+
+  addresses             Address[]
+  orders                Order[]
+
+  @@map("delivery_zones")
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique @map("user_id")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+
+  @@map("cart")
+}
+
+model CartItem {
+  id          Int      @id @default(autoincrement())
+  cartId      Int      @map("cart_id")
+  productId   Int      @map("product_id")
+  quantity    Int      @default(1)
+  priceAtAdd  Decimal  @map("price_at_add") @db.Decimal(10, 2)
+
+  cart        Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  orderNumber     String        @unique @map("order_number") @db.VarChar(30)
+  userId          Int           @map("user_id")
+  addressId       Int           @map("address_id")
+  deliveryZoneId  Int           @map("delivery_zone_id")
+  subtotal        Decimal       @db.Decimal(10, 2)
+  deliveryFee     Decimal       @map("delivery_fee") @db.Decimal(8, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod @map("payment_method")
+  paymentStatus   PaymentStatus @default(pending) @map("payment_status")
+  orderStatus     OrderStatusEnum @default(Pending) @map("order_status")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  user            User                 @relation(fields: [userId], references: [id])
+  address         Address              @relation(fields: [addressId], references: [id])
+  deliveryZone    DeliveryZone         @relation(fields: [deliveryZoneId], references: [id])
+  items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
+  payments        Payment[]
+
+  @@index([userId])
+  @@index([orderStatus])
+  @@map("orders")
+}
+
+enum PaymentMethod {
+  card
+  mobile_money
+  pay_on_delivery
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum OrderStatusEnum {
+  Pending
+  Confirmed
+  Packed
+  Shipped
+  Out_for_Delivery @map("Out for Delivery")
+  Delivered
+  Cancelled
+}
+
+model OrderItem {
+  id                   Int      @id @default(autoincrement())
+  orderId              Int      @map("order_id")
+  productId             Int      @map("product_id")
+  vendorId             Int      @map("vendor_id")
+  productNameSnapshot  String   @map("product_name_snapshot") @db.VarChar(255)
+  unitPrice            Decimal  @map("unit_price") @db.Decimal(10, 2)
+  quantity              Int
+  lineTotal            Decimal  @map("line_total") @db.Decimal(10, 2)
+
+  order                Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product              Product  @relation(fields: [productId], references: [id])
+  vendor               Vendor   @relation(fields: [vendorId], references: [id])
+
+  @@map("order_items")
+}
+
+model OrderStatusHistory {
+  id               Int             @id @default(autoincrement())
+  orderId          Int             @map("order_id")
+  status           OrderStatusEnum
+  note             String?         @db.VarChar(255)
+  changedByUserId  Int?            @map("changed_by_user_id")
+  createdAt        DateTime        @default(now()) @map("created_at")
+
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  changedBy        User?           @relation(fields: [changedByUserId], references: [id])
+
+  @@map("order_status_history")
+}
+
+model Payment {
+  id                  Int             @id @default(autoincrement())
+  orderId             Int             @map("order_id")
+  provider            PaymentProvider
+  providerReference   String          @unique @map("provider_reference") @db.VarChar(150)
+  amount              Decimal         @db.Decimal(10, 2)
+  currency            String          @default("GHS") @db.VarChar(10)
+  status              PaymentTxnStatus @default(initiated)
+  rawResponse         Json?           @map("raw_response")
+  createdAt           DateTime        @default(now()) @map("created_at")
+
+  order               Order           @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
+
+enum PaymentProvider {
+  paystack
+  flutterwave
+}
+
+enum PaymentTxnStatus {
+  initiated
+  successful
+  failed
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  productId Int      @map("product_id")
+  userId    Int      @map("user_id")
+  rating    Int      @db.TinyInt
+  comment   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("reviews")
+}

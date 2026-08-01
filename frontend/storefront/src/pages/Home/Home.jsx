@@ -1,0 +1,73 @@
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import HeroCarousel from './HeroCarousel.jsx';
+import CategoryTile from '../../components/product/CategoryTile.jsx';
+import ProductGrid from '../../components/product/ProductGrid.jsx';
+import { ProductGridSkeleton, SkeletonBlock } from '../../components/common/Skeleton.jsx';
+import ErrorState from '../../components/common/ErrorState.jsx';
+import * as categoryApi from '../../api/categoryApi.js';
+import * as productApi from '../../api/productApi.js';
+
+export default function Home() {
+  const categoriesQuery = useQuery({
+    queryKey: ['categories'],
+    queryFn: categoryApi.listCategories,
+  });
+
+  const featuredQuery = useQuery({
+    queryKey: ['featuredProducts'],
+    queryFn: productApi.getFeaturedProducts,
+  });
+
+  return (
+    <div>
+      <HeroCarousel />
+
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <h2 className="font-display text-2xl font-700 text-ink-900">Shop by category</h2>
+
+        {categoriesQuery.isLoading && (
+          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <SkeletonBlock key={i} className="aspect-square w-full" />
+            ))}
+          </div>
+        )}
+
+        {categoriesQuery.isError && (
+          <div className="mt-6">
+            <ErrorState
+              message={categoriesQuery.error?.message}
+              onRetry={categoriesQuery.refetch}
+            />
+          </div>
+        )}
+
+        {categoriesQuery.data && (
+          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+            {categoriesQuery.data.map((category) => (
+              <CategoryTile key={category.id} category={category} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="flex items-baseline justify-between">
+          <h2 className="font-display text-2xl font-700 text-ink-900">Featured products</h2>
+          <Link to="/products" className="text-sm font-medium text-gold-700 hover:underline">
+            See all
+          </Link>
+        </div>
+        <div className="mt-6">
+          {featuredQuery.isLoading && <ProductGridSkeleton count={8} />}
+          {featuredQuery.isError && (
+            <ErrorState message={featuredQuery.error?.message} onRetry={featuredQuery.refetch} />
+          )}
+          {featuredQuery.data && <ProductGrid products={featuredQuery.data} />}
+        </div>
+      </section>
+    </div>
+  );
+}
