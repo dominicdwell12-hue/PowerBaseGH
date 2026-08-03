@@ -25,7 +25,7 @@ export default function ProductCard({ product }) {
         )}
         {product.discountPrice && (
           <span
-            className="absolute left-2 top-2 rounded-tag bg-brick-DEFAULT px-2 py-0.5
+            className="absolute left-2 top-2 rounded-tag bg-brick px-2 py-0.5
               font-tag text-xs font-semibold text-paper"
           >
             Sale

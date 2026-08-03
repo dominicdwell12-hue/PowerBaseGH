@@ -10,10 +10,10 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-40 bg-ink-DEFAULT text-paper">
+    <header className="sticky top-0 z-40 bg-ink text-paper">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="shrink-0 font-display text-xl font-800 tracking-tight">
-          PowerBase<span className="text-gold-DEFAULT">.</span>Gh
+          PowerBase<span className="text-gold">.</span>Gh
         </Link>
 
         <form
@@ -35,7 +35,7 @@ export default function Navbar() {
           />
           <button
             type="submit"
-            className="rounded-r-lg bg-gold-DEFAULT px-4 py-2 text-sm font-semibold
+            className="rounded-r-lg bg-gold px-4 py-2 text-sm font-semibold
               text-ink-900 hover:bg-gold-700"
           >
             Search
@@ -43,15 +43,15 @@ export default function Navbar() {
         </form>
 
         <nav className="ml-auto flex items-center gap-4 text-sm">
-          <NavLink to="/wishlist" className="hover:text-gold-DEFAULT">
+          <NavLink to="/wishlist" className="hover:text-gold">
             Wishlist
           </NavLink>
-          <NavLink to="/cart" className="relative hover:text-gold-DEFAULT">
+          <NavLink to="/cart" className="relative hover:text-gold">
             Cart
             {itemCount > 0 && (
               <span
                 className="absolute -right-3 -top-2 flex h-4 w-4 items-center justify-center
-                  rounded-full bg-brick-DEFAULT text-[10px] font-semibold"
+                  rounded-full bg-brick text-[10px] font-semibold"
               >
                 {itemCount}
               </span>
@@ -59,7 +59,7 @@ export default function Navbar() {
           </NavLink>
           <NavLink
             to={isAuthenticated ? '/profile' : '/login'}
-            className="hover:text-gold-DEFAULT"
+            className="hover:text-gold"
           >
             {isAuthenticated ? 'Account' : 'Sign in'}
           </NavLink>

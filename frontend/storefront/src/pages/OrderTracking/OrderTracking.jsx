@@ -54,7 +54,7 @@ export default function OrderTracking() {
               <li key={status} className="relative">
                 <span
                   className={`absolute -left-[1.85rem] top-1 h-3 w-3 rounded-full ${
-                    reached ? 'bg-gold-DEFAULT' : 'bg-ink-50'
+                    reached ? 'bg-gold' : 'bg-ink-50'
                   }`}
                 />
                 <p className={`font-body text-sm font-semibold ${reached ? 'text-ink-900' : 'text-ash'}`}>

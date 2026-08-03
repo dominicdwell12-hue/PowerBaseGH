@@ -38,9 +38,9 @@ export default function HeroCarousel() {
   const slide = SLIDES[active];
 
   return (
-    <section className="bg-ink-DEFAULT text-paper">
+    <section className="bg-ink text-paper">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <p className="font-tag text-xs uppercase tracking-wide text-gold-DEFAULT">
+        <p className="font-tag text-xs uppercase tracking-wide text-gold">
           {slide.eyebrow}
         </p>
         <h1 className="mt-3 max-w-xl font-display text-4xl font-800 leading-tight sm:text-5xl">
@@ -49,7 +49,7 @@ export default function HeroCarousel() {
         <p className="mt-4 max-w-md text-ink-100">{slide.body}</p>
         <Link
           to={slide.cta.to}
-          className="mt-6 inline-flex items-center rounded-lg bg-gold-DEFAULT px-5 py-2.5
+          className="mt-6 inline-flex items-center rounded-lg bg-gold px-5 py-2.5
             font-body text-sm font-semibold text-ink-900 transition-colors hover:bg-gold-700"
         >
           {slide.cta.label}
@@ -65,7 +65,7 @@ export default function HeroCarousel() {
               aria-label={`Show promotion ${index + 1}`}
               onClick={() => setActive(index)}
               className={`h-1.5 rounded-full transition-all ${
-                index === active ? 'w-8 bg-gold-DEFAULT' : 'w-4 bg-ink-400'
+                index === active ? 'w-8 bg-gold' : 'w-4 bg-ink-400'
               }`}
             />
           ))}

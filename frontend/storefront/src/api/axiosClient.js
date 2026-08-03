@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 
 // Every frontend module talks to the backend only through api/*.js —
 // no raw axios/fetch calls inside components (see 03-folder-structure.md).

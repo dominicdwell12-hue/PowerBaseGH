@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-DEFAULT px-4">
+    <div className="flex min-h-screen items-center justify-center bg-ink px-4">
       <div className="w-full max-w-sm rounded-xl bg-white p-6">
         <p className="font-display text-lg font-800 text-ink-900">
           PowerBase<span className="text-gold-700">.</span>Gh

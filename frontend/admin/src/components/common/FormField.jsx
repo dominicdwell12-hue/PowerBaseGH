@@ -12,4 +12,4 @@ export default function FormField({ label, error, children, htmlFor }) {
 
 export const inputClass =
   'w-full rounded-lg border border-ink-100 px-3 py-2 text-sm text-ink-900 ' +
-  'placeholder:text-ash focus:border-gold-DEFAULT focus:outline-none';
+  'placeholder:text-ash focus:border-gold focus:outline-none';

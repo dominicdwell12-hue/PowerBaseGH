@@ -115,7 +115,7 @@ export default function ProductDetails() {
                   type="button"
                   onClick={() => setActiveImage(i)}
                   className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 ${
-                    i === activeImage ? 'border-gold-DEFAULT' : 'border-transparent'
+                    i === activeImage ? 'border-gold' : 'border-transparent'
                   }`}
                 >
                   {img.imageUrl && (

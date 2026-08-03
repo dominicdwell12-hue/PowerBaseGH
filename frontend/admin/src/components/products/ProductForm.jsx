@@ -146,7 +146,7 @@ export default function ProductForm({
               <div key={img.id} className="relative h-16 w-16 overflow-hidden rounded-lg border border-ink-100">
                 <img src={img.imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
                 {img.isPrimary ? (
-                  <span className="absolute bottom-0 left-0 right-0 bg-gold-DEFAULT text-center text-[10px] font-semibold text-ink-900">
+                  <span className="absolute bottom-0 left-0 right-0 bg-gold text-center text-[10px] font-semibold text-ink-900">
                     Primary
                   </span>
                 ) : (
@@ -162,7 +162,7 @@ export default function ProductForm({
                   type="button"
                   onClick={() => onDeleteImage(img.id)}
                   aria-label="Remove image"
-                  className="absolute right-0 top-0 rounded-bl bg-brick-DEFAULT px-1 text-[10px] text-paper"
+                  className="absolute right-0 top-0 rounded-bl bg-brick px-1 text-[10px] text-paper"
                 >
                   ✕
                 </button>

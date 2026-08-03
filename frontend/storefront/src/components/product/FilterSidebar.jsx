@@ -69,7 +69,7 @@ export default function FilterSidebar({ categories, filters, onChange }) {
         </div>
         <button
           type="submit"
-          className="mt-2 w-full rounded-lg bg-ink-DEFAULT py-1.5 text-sm font-semibold text-paper hover:bg-ink-600"
+          className="mt-2 w-full rounded-lg bg-ink py-1.5 text-sm font-semibold text-paper hover:bg-ink-600"
         >
           Apply
         </button>

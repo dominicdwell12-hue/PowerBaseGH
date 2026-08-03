@@ -156,7 +156,7 @@ export default function Checkout() {
                 <label
                   key={address.id}
                   className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${
-                    selectedAddressId === address.id ? 'border-gold-DEFAULT' : 'border-ink-50'
+                    selectedAddressId === address.id ? 'border-gold' : 'border-ink-50'
                   }`}
                 >
                   <input

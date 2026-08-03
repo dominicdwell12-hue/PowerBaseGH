@@ -24,7 +24,7 @@ export default function Pagination({ page, totalPages, onChange }) {
             onClick={() => onChange(p)}
             aria-current={p === page ? 'page' : undefined}
             className={`rounded-lg px-3 py-1.5 text-sm ${
-              p === page ? 'bg-ink-DEFAULT text-paper' : 'text-ink-900 hover:bg-ink-50'
+              p === page ? 'bg-ink text-paper' : 'text-ink-900 hover:bg-ink-50'
             }`}
           >
             {p}
