@@ -15,6 +15,7 @@ import Wishlist from '../pages/Wishlist/Wishlist.jsx';
 import Profile from '../pages/Profile/Profile.jsx';
 import Login from '../pages/Auth/Login.jsx';
 import Register from '../pages/Auth/Register.jsx';
+import Support from '../pages/Support/Support.jsx';
 import NotFound from '../pages/NotFound/NotFound.jsx';
 
 export default function AppRoutes() {
@@ -27,6 +28,7 @@ export default function AppRoutes() {
         <Route path="cart" element={<Cart />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="support" element={<Support />} />
 
         {/* Everything below needs a signed-in customer */}
         <Route element={<ProtectedRoute />}>

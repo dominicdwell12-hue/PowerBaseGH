@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import HeroCarousel from './HeroCarousel.jsx';
-import CategoryTile from '../../components/product/CategoryTile.jsx';
+import FeatureIconRow from '../../components/common/FeatureIconRow.jsx';
+import PromoBanners from '../../components/common/PromoBanners.jsx';
+import WhyShopSection from '../../components/common/WhyShopSection.jsx';
+import CategoryCard from '../../components/product/CategoryCard.jsx';
 import ProductGrid from '../../components/product/ProductGrid.jsx';
 import { ProductGridSkeleton, SkeletonBlock } from '../../components/common/Skeleton.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
@@ -22,15 +25,21 @@ export default function Home() {
   return (
     <div>
       <HeroCarousel />
+      <FeatureIconRow />
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h2 className="font-display text-2xl font-700 text-ink-900">Shop by category</h2>
+      <section className="mx-auto max-w-7xl px-4 pt-16 pb-4 sm:px-6 lg:px-8">
+        <div className="flex items-baseline justify-between">
+          <h2 className="font-display text-2xl font-700 text-ink-900">Shop by category</h2>
+          <Link to="/products" className="text-sm font-medium text-gold-700 hover:underline">
+            View all categories
+          </Link>
+        </div>
 
         {categoriesQuery.isLoading && (
-          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               // eslint-disable-next-line react/no-array-index-key
-              <SkeletonBlock key={i} className="aspect-square w-full" />
+              <SkeletonBlock key={i} className="aspect-[4/3] w-full" />
             ))}
           </div>
         )}
@@ -45,12 +54,16 @@ export default function Home() {
         )}
 
         {categoriesQuery.data && (
-          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
-            {categoriesQuery.data.map((category) => (
-              <CategoryTile key={category.id} category={category} />
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {categoriesQuery.data.slice(0, 6).map((category) => (
+              <CategoryCard key={category.id} category={category} />
             ))}
           </div>
         )}
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <PromoBanners />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
@@ -68,6 +81,10 @@ export default function Home() {
           {featuredQuery.data && <ProductGrid products={featuredQuery.data} />}
         </div>
       </section>
+
+      <div className="border-t border-ink-50">
+        <WhyShopSection />
+      </div>
     </div>
   );
 }
