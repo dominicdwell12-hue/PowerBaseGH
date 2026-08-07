@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Zap, Truck } from 'lucide-react';
+import ImageWithFallback from '../../components/common/ImageWithFallback.jsx';
+import { HERO_IMAGE } from '../../utils/images.js';
 
 const SLIDES = [
   {
@@ -82,10 +84,25 @@ export default function HeroCarousel() {
           </div>
         </div>
 
-        {/* Placeholder for real product photography — swap for real
-            images once Cloudinary + real inventory exist. */}
-        <div className="hidden aspect-square items-center justify-center rounded-2xl border border-ink-600 bg-ink-600 lg:flex">
-          <Icon size={96} className="text-gold" aria-hidden="true" />
+        <div className="relative hidden aspect-square overflow-hidden rounded-2xl border border-ink-600 bg-ink-600 lg:block">
+          <ImageWithFallback
+            src={HERO_IMAGE.src}
+            alt={HERO_IMAGE.alt}
+            loading="eager"
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+            containerClassName="bg-ink-600"
+            fallback={<Icon size={96} className="text-gold" aria-hidden="true" />}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/70 via-transparent to-transparent" />
+          <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-lg bg-paper/95 px-3 py-2 shadow-lg">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold text-ink-900">
+              <Icon size={16} aria-hidden="true" />
+            </span>
+            <span className="font-body text-xs font-semibold text-ink-900">
+              Shop with confidence, Ghana-wide
+            </span>
+          </div>
         </div>
       </div>
     </section>

@@ -8,11 +8,11 @@ import {
   Package,
   ArrowRight,
 } from 'lucide-react';
+import ImageWithFallback from '../common/ImageWithFallback.jsx';
+import { getCategoryImage } from '../../utils/images.js';
 
-// No real category photography exists yet (Cloudinary isn't configured
-// and there's no real inventory) — this picks a representative icon by
-// keyword so the grid isn't just blank boxes until real images replace
-// these placeholders.
+// Used as the graceful fallback if a category's photo fails to load —
+// picks a representative icon by keyword so the tile still reads clearly.
 function pickIcon(name = '') {
   const n = name.toLowerCase();
   if (n.includes('phone') || n.includes('electronic') || n.includes('tablet')) return Smartphone;
@@ -25,14 +25,20 @@ function pickIcon(name = '') {
 
 export default function CategoryCard({ category }) {
   const Icon = pickIcon(category.name);
+  const image = getCategoryImage(category.name);
 
   return (
     <Link
       to={`/products?category=${category.slug}`}
       className="group overflow-hidden rounded-xl border border-ink-50 bg-white transition-shadow hover:shadow-md"
     >
-      <div className="flex aspect-[4/3] items-center justify-center bg-ink-50">
-        <Icon size={40} className="text-ink-400" aria-hidden="true" />
+      <div className="aspect-[4/3] overflow-hidden bg-ink-50">
+        <ImageWithFallback
+          src={category.imageUrl ?? image.src}
+          alt={image.alt}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          fallback={<Icon size={40} className="text-ink-400" aria-hidden="true" />}
+        />
       </div>
       <div className="p-4">
         <p className="font-body text-sm font-semibold text-ink-900">{category.name}</p>

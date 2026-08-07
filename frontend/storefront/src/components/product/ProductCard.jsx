@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
+import { Package } from 'lucide-react';
 import PriceTag from '../common/PriceTag.jsx';
+import ImageWithFallback from '../common/ImageWithFallback.jsx';
 
 export default function ProductCard({ product }) {
   const primaryImage = product.images?.find((img) => img.isPrimary) ?? product.images?.[0];
@@ -14,15 +16,13 @@ export default function ProductCard({ product }) {
         bg-white transition-shadow hover:shadow-lg focus-visible:shadow-lg"
     >
       <div className="relative aspect-square overflow-hidden bg-ink-50">
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={product.name}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-300
-              group-hover:scale-105"
-          />
-        )}
+        <ImageWithFallback
+          src={imageUrl}
+          alt={product.name}
+          className="h-full w-full object-cover transition-transform duration-300
+            group-hover:scale-105"
+          fallback={<Package size={32} className="text-ink-400" aria-hidden="true" />}
+        />
         {product.discountPrice && (
           <span
             className="absolute left-2 top-2 rounded-tag bg-brick px-2 py-0.5

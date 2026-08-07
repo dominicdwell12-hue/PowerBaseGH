@@ -14,7 +14,7 @@ export default function WhyShopSection() {
       <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
         {REASONS.map(({ icon: Icon, title, subtitle }) => (
           <div key={title} className="flex items-start gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ink-50 text-ink-900">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gold-50 text-gold-700">
               <Icon size={18} aria-hidden="true" />
             </span>
             <div>
