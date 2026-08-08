@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Heart, ShoppingCart, User } from 'lucide-react';
+import { Heart, ShoppingCart, User, Search } from 'lucide-react';
 import { useCart } from '../../hooks/useCart.js';
 import { useAuth } from '../../hooks/useAuth.js';
 
@@ -19,29 +19,31 @@ export default function Navbar() {
 
         <form
           role="search"
-          className="hidden flex-1 items-center sm:flex"
+          className="hidden flex-1 sm:flex"
           onSubmit={(e) => {
             e.preventDefault();
             navigate(`/products?search=${encodeURIComponent(query)}`);
           }}
         >
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search for products, categories…"
-            aria-label="Search products"
-            className="w-full rounded-l-lg border-0 px-3 py-2 text-sm text-ink-900
-              placeholder:text-ash focus:outline-none"
-          />
-          <button
-            type="submit"
-            aria-label="Search"
-            className="rounded-r-lg bg-gold px-4 py-2 text-sm font-semibold
-              text-ink-900 hover:bg-gold-700"
-          >
-            Search
-          </button>
+          <div className="relative w-full">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for products, categories…"
+              aria-label="Search products"
+              className="w-full rounded-full border-0 py-2.5 pl-4 pr-11 text-sm text-ink-900
+                placeholder:text-ash focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+            <button
+              type="submit"
+              aria-label="Search"
+              className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center
+                justify-center rounded-full text-ink-400 hover:text-gold-700"
+            >
+              <Search size={18} aria-hidden="true" />
+            </button>
+          </div>
         </form>
 
         <nav className="ml-auto flex items-center gap-5 text-xs">

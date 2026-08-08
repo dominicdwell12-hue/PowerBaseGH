@@ -15,11 +15,11 @@ import { getCategoryImage } from '../../utils/images.js';
 // picks a representative icon by keyword so the tile still reads clearly.
 function pickIcon(name = '') {
   const n = name.toLowerCase();
-  if (n.includes('phone') || n.includes('electronic') || n.includes('tablet')) return Smartphone;
+  if (n.includes('appliance') || n.includes('kitchen')) return Refrigerator;
+  if (n.includes('phone') || n.includes('tablet') || n.includes('electronic')) return Smartphone;
   if (n.includes('fashion') || n.includes('cloth') || n.includes('wear')) return Shirt;
   if (n.includes('beauty') || n.includes('health')) return Sparkles;
   if (n.includes('home') || n.includes('living') || n.includes('furniture')) return Sofa;
-  if (n.includes('appliance') || n.includes('kitchen')) return Refrigerator;
   return Package;
 }
 

@@ -24,7 +24,7 @@ export default function ImageWithFallback({
   if (showFallback) {
     return (
       <div
-        className={`flex h-full w-full items-center justify-center bg-ink-50 ${containerClassName}`}
+        className={`flex h-full w-full items-center justify-center ${containerClassName || 'bg-ink-50'}`}
       >
         {fallback ?? <ImageOff size={fallbackIconSize} className="text-ink-400" aria-hidden="true" />}
       </div>

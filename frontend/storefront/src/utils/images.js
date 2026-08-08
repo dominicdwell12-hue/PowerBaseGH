@@ -11,27 +11,33 @@ function img(id, width = 800) {
 }
 
 export const HERO_IMAGE = {
-  src: img('photo-1607082349566-187342175e2f', 1000),
-  alt: 'Customer checking a delivery box after shopping online',
+  src: img('photo-1550009158-9ebf69173e03', 1000),
+  alt: 'Smart speaker, headphones and electronics staged in a modern home',
 };
 
 // Ordered most-specific first so "Phones & Tablets" doesn't get caught by a
-// looser "electronics" match.
+// looser "electronics" match, and "Appliances" doesn't fall into
+// "Home & Living".
 const CATEGORY_IMAGE_RULES = [
   {
     test: /phone|tablet|mobile/i,
     src: img('photo-1580910051074-3eb694886505'),
-    alt: 'Smartphones and tablets on display',
+    alt: 'Stack of smartphones and tablets',
+  },
+  {
+    test: /appliance|fridge|refrigerator|washer|microwave/i,
+    src: img('photo-1584568694244-14fbdf83bd30'),
+    alt: 'Kitchen appliances including a fridge and microwave',
   },
   {
     test: /electronic|gadget|computer|laptop/i,
     src: img('photo-1498049794561-7780e7231661'),
-    alt: 'Headphones, laptop and electronic gadgets',
+    alt: 'Earbuds, smartphone and smartwatch laid out together',
   },
   {
     test: /fashion|cloth|wear|apparel|shoe/i,
     src: img('photo-1445205170230-053b83016050'),
-    alt: 'Folded clothing, shoes and fashion accessories',
+    alt: 'Clothing hanging on a rack',
   },
   {
     test: /beauty|health|skincare|cosmetic/i,
@@ -39,9 +45,9 @@ const CATEGORY_IMAGE_RULES = [
     alt: 'Skincare and beauty products arranged on a table',
   },
   {
-    test: /home|living|furniture|kitchen|appliance/i,
+    test: /home|living|furniture|kitchen/i,
     src: img('photo-1567016432779-094069958ea5'),
-    alt: 'Cozy living room furniture and home accessories',
+    alt: 'Sofa, floor lamp and plant in a living room',
   },
 ];
 

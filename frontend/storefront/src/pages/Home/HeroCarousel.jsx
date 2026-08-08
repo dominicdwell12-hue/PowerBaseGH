@@ -84,7 +84,7 @@ export default function HeroCarousel() {
           </div>
         </div>
 
-        <div className="relative hidden aspect-square overflow-hidden rounded-2xl border border-ink-600 bg-ink-600 lg:block">
+        <div className="hidden aspect-square overflow-hidden rounded-2xl border border-ink-600 bg-ink-600 lg:block">
           <ImageWithFallback
             src={HERO_IMAGE.src}
             alt={HERO_IMAGE.alt}
@@ -94,15 +94,6 @@ export default function HeroCarousel() {
             containerClassName="bg-ink-600"
             fallback={<Icon size={96} className="text-gold" aria-hidden="true" />}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/70 via-transparent to-transparent" />
-          <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-lg bg-paper/95 px-3 py-2 shadow-lg">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold text-ink-900">
-              <Icon size={16} aria-hidden="true" />
-            </span>
-            <span className="font-body text-xs font-semibold text-ink-900">
-              Shop with confidence, Ghana-wide
-            </span>
-          </div>
         </div>
       </div>
     </section>
