@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { ImageOff } from 'lucide-react';
 import PriceTag from '../../components/common/PriceTag.jsx';
 import Button from '../../components/common/Button.jsx';
 import QuantityStepper from '../../components/common/QuantityStepper.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
+import ImageWithFallback from '../../components/common/ImageWithFallback.jsx';
 import ProductGrid from '../../components/product/ProductGrid.jsx';
 import { SkeletonBlock } from '../../components/common/Skeleton.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
@@ -99,13 +101,12 @@ export default function ProductDetails() {
       <div className="grid gap-8 md:grid-cols-2">
         <div>
           <div className="aspect-square overflow-hidden rounded-xl bg-ink-50">
-            {images[activeImage]?.imageUrl && (
-              <img
-                src={images[activeImage].imageUrl}
-                alt={product.name}
-                className="h-full w-full object-cover"
-              />
-            )}
+            <ImageWithFallback
+              src={images[activeImage]?.imageUrl}
+              alt={product.name}
+              className="h-full w-full object-cover"
+              fallback={<ImageOff size={40} className="text-ink-400" aria-hidden="true" />}
+            />
           </div>
           {images.length > 1 && (
             <div className="mt-3 flex gap-2">
@@ -118,9 +119,12 @@ export default function ProductDetails() {
                     i === activeImage ? 'border-gold' : 'border-transparent'
                   }`}
                 >
-                  {img.imageUrl && (
-                    <img src={img.imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
-                  )}
+                  <ImageWithFallback
+                    src={img.imageUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    fallbackIconSize={16}
+                  />
                 </button>
               ))}
             </div>
