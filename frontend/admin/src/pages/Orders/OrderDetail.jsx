@@ -81,6 +81,7 @@ export default function OrderDetail() {
             <li key={item.productId} className="flex justify-between">
               <span>
                 {item.name} × {item.quantity}
+                {item.vendor?.name ? <span className="text-ash/70"> · {item.vendor.name}</span> : null}
               </span>
               <span className="font-tag">{formatCurrency(item.lineTotal)}</span>
             </li>
@@ -103,6 +104,36 @@ export default function OrderDetail() {
         <p className="mt-2 text-xs text-ash">
           Payment: {order.paymentMethod.replace(/_/g, ' ')} · {order.paymentStatus}
         </p>
+      </section>
+
+      <section className="rounded-xl border border-ink-50 bg-white p-4">
+        <h2 className="font-display text-sm font-700 text-ink-900">Payment</h2>
+        {order.payments?.length ? (
+          <ul className="mt-2 space-y-3 text-sm text-ash">
+            {order.payments.map((p) => (
+              <li key={p.reference} className="border-t border-ink-50 pt-3 first:border-0 first:pt-0">
+                <div className="flex justify-between">
+                  <span className="font-medium text-ink-900 capitalize">{p.provider}</span>
+                  <StatusBadge status={p.status} />
+                </div>
+                <p className="mt-1">
+                  Ref: <span className="font-tag">{p.reference}</span>
+                  {p.method ? ` · ${p.method.replace(/_/g, ' ')}` : ''}
+                </p>
+                <p className="mt-1 flex justify-between">
+                  <span>{formatCurrency(p.amount)} {p.currency}</span>
+                  <span>
+                    {p.paidAt
+                      ? `Paid ${new Date(p.paidAt).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`
+                      : 'Not yet paid'}
+                  </span>
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-ash">No payment attempts recorded for this order yet.</p>
+        )}
       </section>
 
       <section className="rounded-xl border border-ink-50 bg-white p-4">

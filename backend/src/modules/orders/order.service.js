@@ -284,7 +284,41 @@ async function cancelOrder(userId, orderNumber, reason) {
 
 // --- Admin ---
 
-const orderIncludeWithUser = { ...orderInclude, user: true };
+const orderIncludeWithUser = {
+  ...orderInclude,
+  user: true,
+  payments: { orderBy: { createdAt: 'asc' } },
+  items: { include: { vendor: { select: { name: true } } } },
+};
+
+// Admin sees everything: vendor per line item and full payment detail
+// (provider, reference, method, amount, status, paidAt). This is a
+// separate function from serializeOrder() rather than a role flag on it,
+// so there's no risk of a missed check leaking vendor/payment internals
+// into a customer-facing response — the two shapes are built independently.
+function serializeOrderForAdmin(order) {
+  return {
+    ...serializeOrder(order),
+    items: order.items?.map((item) => ({
+      productId: item.productId,
+      name: item.productNameSnapshot,
+      unitPrice: Number(item.unitPrice),
+      quantity: item.quantity,
+      lineTotal: Number(item.lineTotal),
+      vendor: item.vendor ? { name: item.vendor.name } : undefined,
+    })),
+    payments: order.payments?.map((p) => ({
+      provider: p.provider,
+      reference: p.providerReference,
+      method: p.paymentMethod,
+      amount: Number(p.amount),
+      currency: p.currency,
+      status: p.status,
+      paidAt: p.paidAt,
+      createdAt: p.createdAt,
+    })),
+  };
+}
 
 // The legal forward path a fulfilment team actually follows, plus
 // Cancelled as an escape hatch from any non-terminal state. Admins
@@ -338,7 +372,7 @@ async function adminListOrders(query) {
   ]);
 
   return {
-    orders: orders.map(serializeOrder),
+    orders: orders.map(serializeOrderForAdmin),
     pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
   };
 }
@@ -353,7 +387,7 @@ async function adminGetOrder(orderNumber) {
     throw new AppError('Order not found', 404);
   }
 
-  return serializeOrder(order);
+  return serializeOrderForAdmin(order);
 }
 
 async function adminUpdateStatus(adminUserId, orderNumber, { status, note }) {
@@ -394,7 +428,7 @@ async function adminUpdateStatus(adminUserId, orderNumber, { status, note }) {
     });
   });
 
-  return serializeOrder(updated);
+  return serializeOrderForAdmin(updated);
 }
 
 module.exports = {

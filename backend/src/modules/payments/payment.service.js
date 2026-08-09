@@ -31,6 +31,17 @@ function serializePayment(payment) {
   };
 }
 
+// Pulls the channel a transaction actually settled through (e.g. "card",
+// "mobile_money") out of the *verified* gateway response — this is only
+// ever called with data that came back from Paystack/Flutterwave's own
+// API or a signature-checked webhook, never from anything the browser sent.
+function extractPaymentMethod(provider, rawResponse) {
+  if (provider === 'paystack') {
+    return rawResponse?.data?.channel ?? null;
+  }
+  return rawResponse?.data?.payment_type ?? null;
+}
+
 // --- Initialize ---
 
 async function initializePayment(userId, { orderId, provider }) {
@@ -122,7 +133,13 @@ async function finalizePayment(payment, isSuccessful, rawResponse) {
   return prisma.$transaction(async (tx) => {
     await tx.payment.update({
       where: { id: payment.id },
-      data: { status: isSuccessful ? 'successful' : 'failed', rawResponse },
+      data: {
+        status: isSuccessful ? 'successful' : 'failed',
+        rawResponse,
+        ...(isSuccessful
+          ? { paidAt: new Date(), paymentMethod: extractPaymentMethod(payment.provider, rawResponse) }
+          : {}),
+      },
     });
 
     const orderUpdateData = { paymentStatus: isSuccessful ? 'paid' : 'failed' };

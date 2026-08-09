@@ -17,10 +17,10 @@ import * as paymentApi from '../../api/paymentApi.js';
 // 'pay_on_delivery' (see order.validation.js), while POST
 // /payments/initialize takes provider: 'paystack' | 'flutterwave' (see
 // payment.validation.js) and doesn't care which paymentMethod the order
-// was placed with. This is the mapping this storefront uses between the
-// two — Paystack for card, Flutterwave for Mobile Money — since the API
-// doesn't dictate one.
-const PROVIDER_BY_METHOD = { card: 'paystack', mobile_money: 'flutterwave' };
+// was placed with. Paystack is the primary gateway for both card and
+// Mobile Money in Ghana, so both map to it. Flutterwave stays wired up
+// in the backend as a dormant backup — nothing here calls it currently.
+const PROVIDER_BY_METHOD = { card: 'paystack', mobile_money: 'paystack' };
 
 export default function Checkout() {
   const navigate = useNavigate();

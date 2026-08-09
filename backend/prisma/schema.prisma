@@ -287,6 +287,12 @@ model Payment {
   amount              Decimal         @db.Decimal(10, 2)
   currency            String          @default("GHS") @db.VarChar(10)
   status              PaymentTxnStatus @default(initiated)
+  // Channel the gateway reports the transaction went through on
+  // (e.g. "card", "mobile_money") — populated from the verified
+  // Paystack/Flutterwave response, never trusted from the frontend.
+  paymentMethod       String?         @map("payment_method") @db.VarChar(30)
+  // Set only once a payment is confirmed successful; null until then.
+  paidAt              DateTime?       @map("paid_at")
   rawResponse         Json?           @map("raw_response")
   createdAt           DateTime        @default(now()) @map("created_at")
 
