@@ -1,5 +1,9 @@
 const prisma = require('../../config/database');
+const cloudinary = require('../../config/cloudinary');
+const { uploadBufferToCloudinary } = require('../../utils/cloudinaryUpload');
 const AppError = require('../../utils/AppError');
+
+const CATEGORY_IMAGE_FOLDER = 'powerbase-gh/categories';
 
 function slugify(text) {
   return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -59,7 +63,7 @@ async function adminListCategories() {
   });
 }
 
-async function createCategory({ name, parentId, imageUrl }) {
+async function createCategory({ name, parentId, imageFile }) {
   if (parentId) {
     const parent = await prisma.category.findUnique({ where: { id: parentId } });
     if (!parent) {
@@ -68,18 +72,48 @@ async function createCategory({ name, parentId, imageUrl }) {
   }
 
   const slug = await generateUniqueSlug(name);
-  return prisma.category.create({ data: { name, slug, parentId, imageUrl } });
+
+  let imageUrl;
+  let cloudinaryPublicId;
+  if (imageFile) {
+    const result = await uploadBufferToCloudinary(imageFile.buffer, CATEGORY_IMAGE_FOLDER);
+    imageUrl = result.secure_url;
+    cloudinaryPublicId = result.public_id;
+  }
+
+  return prisma.category.create({ data: { name, slug, parentId, imageUrl, cloudinaryPublicId } });
 }
 
-async function updateCategory(id, data) {
+async function updateCategory(id, { name, parentId, imageFile, removeImage }) {
   const category = await prisma.category.findUnique({ where: { id } });
   if (!category) {
     throw new AppError('Category not found', 404);
   }
 
-  if (data.parentId === id) {
+  if (parentId === id) {
     throw new AppError('A category cannot be its own parent', 400);
   }
+
+  const data = { name, parentId };
+
+  if (imageFile) {
+    // Replacing the image: upload the new one, then clean up the old one
+    // in Cloudinary so we don't leak orphaned assets.
+    const result = await uploadBufferToCloudinary(imageFile.buffer, CATEGORY_IMAGE_FOLDER);
+    if (category.cloudinaryPublicId) {
+      await cloudinary.uploader.destroy(category.cloudinaryPublicId).catch(() => {});
+    }
+    data.imageUrl = result.secure_url;
+    data.cloudinaryPublicId = result.public_id;
+  } else if (removeImage) {
+    if (category.cloudinaryPublicId) {
+      await cloudinary.uploader.destroy(category.cloudinaryPublicId).catch(() => {});
+    }
+    data.imageUrl = null;
+    data.cloudinaryPublicId = null;
+  }
+  // If neither imageFile nor removeImage is set, imageUrl/cloudinaryPublicId
+  // are simply left out of `data` — Prisma leaves those columns untouched.
 
   return prisma.category.update({ where: { id }, data });
 }
@@ -100,6 +134,10 @@ async function deleteCategory(id) {
 
   if (category._count.children > 0) {
     throw new AppError('Cannot delete a category that has subcategories. Delete or reassign them first.', 409);
+  }
+
+  if (category.cloudinaryPublicId) {
+    await cloudinary.uploader.destroy(category.cloudinaryPublicId).catch(() => {});
   }
 
   await prisma.category.delete({ where: { id } });

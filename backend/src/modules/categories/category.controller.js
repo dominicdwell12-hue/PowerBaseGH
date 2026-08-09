@@ -36,7 +36,7 @@ async function adminListCategories(req, res, next) {
 
 async function createCategory(req, res, next) {
   try {
-    const category = await categoryService.createCategory(req.body);
+    const category = await categoryService.createCategory({ ...req.body, imageFile: req.file });
     return success(res, { data: { category }, message: 'Category created', statusCode: 201 });
   } catch (err) {
     next(err);
@@ -45,7 +45,10 @@ async function createCategory(req, res, next) {
 
 async function updateCategory(req, res, next) {
   try {
-    const category = await categoryService.updateCategory(Number(req.params.id), req.body);
+    const category = await categoryService.updateCategory(Number(req.params.id), {
+      ...req.body,
+      imageFile: req.file,
+    });
     return success(res, { data: { category }, message: 'Category updated' });
   } catch (err) {
     next(err);
