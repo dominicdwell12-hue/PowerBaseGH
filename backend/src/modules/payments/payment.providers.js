@@ -44,7 +44,9 @@ async function paystackVerify(reference) {
     throw new AppError(data.message || 'Failed to verify Paystack payment', 502);
   }
 
-  return { isSuccessful: data.data?.status === 'success', raw: data };
+  // Paystack reports amount in pesewas (smallest unit) — the caller
+  // converts back to GHS before comparing against the stored order total.
+  return { isSuccessful: data.data?.status === 'success', amount: data.data?.amount, raw: data };
 }
 
 async function flutterwaveInitialize({ email, name, amount, reference, redirectUrl }) {
@@ -82,7 +84,9 @@ async function flutterwaveVerify(reference) {
     throw new AppError(data.message || 'Failed to verify Flutterwave payment', 502);
   }
 
-  return { isSuccessful: data.data?.status === 'successful', raw: data };
+  // Flutterwave reports amount in the currency's base unit (GHS), unlike
+  // Paystack's smallest-unit convention — no conversion needed here.
+  return { isSuccessful: data.data?.status === 'successful', amount: data.data?.amount, raw: data };
 }
 
 module.exports = {

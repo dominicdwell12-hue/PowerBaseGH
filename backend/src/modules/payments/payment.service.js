@@ -31,6 +31,18 @@ function serializePayment(payment) {
   };
 }
 
+// Cross-checks the amount a gateway reports settling against the amount
+// we recorded in the database at initialize() time (itself derived from
+// order.total, never from the client). A gateway "success" status alone
+// is not sufficient — this guards against a transaction reference somehow
+// getting reconciled against the wrong amount. Small epsilon accounts for
+// GHS decimal rounding, not for a genuinely different amount.
+function isAmountMatching(provider, expectedGhsAmount, rawAmount) {
+  if (rawAmount === undefined || rawAmount === null) return false;
+  const actualGhsAmount = provider === 'paystack' ? rawAmount / 100 : rawAmount;
+  return Math.abs(actualGhsAmount - expectedGhsAmount) < 0.01;
+}
+
 // Pulls the channel a transaction actually settled through (e.g. "card",
 // "mobile_money") out of the *verified* gateway response — this is only
 // ever called with data that came back from Paystack/Flutterwave's own
@@ -119,10 +131,13 @@ async function verifyPayment(userId, reference) {
       ? await providers.paystackVerify(reference)
       : await providers.flutterwaveVerify(reference);
 
-  const updatedOrder = await finalizePayment(payment, gatewayResult.isSuccessful, gatewayResult.raw);
+  const isSuccessful =
+    gatewayResult.isSuccessful && isAmountMatching(payment.provider, Number(payment.amount), gatewayResult.amount);
+
+  const updatedOrder = await finalizePayment(payment, isSuccessful, gatewayResult.raw);
 
   return {
-    payment: { ...serializePayment(payment), status: gatewayResult.isSuccessful ? 'successful' : 'failed' },
+    payment: { ...serializePayment(payment), status: isSuccessful ? 'successful' : 'failed' },
     orderStatus: updatedOrder.orderStatus,
   };
 }
@@ -159,7 +174,7 @@ async function finalizePayment(payment, isSuccessful, rawResponse) {
   });
 }
 
-async function finalizeByReference(reference, isSuccessful, rawResponse) {
+async function reconcilePayment(reference, { isSuccessful, amount, rawResponse }) {
   const payment = await prisma.payment.findUnique({ where: { providerReference: reference } });
 
   // Webhooks can arrive for references we don't recognize (retries,
@@ -169,7 +184,8 @@ async function finalizeByReference(reference, isSuccessful, rawResponse) {
     return;
   }
 
-  await finalizePayment(payment, isSuccessful, rawResponse);
+  const confirmed = isSuccessful && isAmountMatching(payment.provider, Number(payment.amount), amount);
+  await finalizePayment(payment, confirmed, rawResponse);
 }
 
 // --- Webhooks ---
@@ -189,9 +205,9 @@ async function handlePaystackWebhook(rawBody, signatureHeader, event) {
   }
 
   if (event.event === 'charge.success') {
-    await finalizeByReference(event.data.reference, true, event);
+    await reconcilePayment(event.data.reference, { isSuccessful: true, amount: event.data.amount, rawResponse: event });
   } else if (event.event === 'charge.failed') {
-    await finalizeByReference(event.data.reference, false, event);
+    await reconcilePayment(event.data.reference, { isSuccessful: false, amount: event.data.amount, rawResponse: event });
   }
 }
 
@@ -207,9 +223,10 @@ async function handleFlutterwaveWebhook(signatureHeader, event) {
 
   const isSuccessful = event.status === 'successful' && event.data?.status === 'successful';
   const reference = event.data?.tx_ref;
+  const amount = event.data?.amount;
 
   if (reference) {
-    await finalizeByReference(reference, isSuccessful, event);
+    await reconcilePayment(reference, { isSuccessful, amount, rawResponse: event });
   }
 }
 
