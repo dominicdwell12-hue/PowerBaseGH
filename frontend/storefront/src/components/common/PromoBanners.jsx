@@ -6,8 +6,8 @@ import { PROMO_IMAGES } from '../../utils/images.js';
 export default function PromoBanners() {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
-      <div className="relative overflow-hidden rounded-2xl bg-ink p-6 text-paper sm:p-8">
-        <span className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-xs font-bold text-ink-900">
+      <div className="relative overflow-hidden rounded-2xl border border-ink-600 bg-ink-600 p-6 text-cream sm:p-8">
+        <span className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-magenta text-xs font-bold text-cream">
           30% off
         </span>
         <p className="text-xs uppercase tracking-wide text-ink-100">Best deals</p>
@@ -26,22 +26,22 @@ export default function PromoBanners() {
             alt={PROMO_IMAGES.deals.alt}
             className="h-full w-full object-contain drop-shadow-xl"
             containerClassName="bg-transparent"
-            fallback={<Headphones size={72} className="text-ink-600" aria-hidden="true" />}
+            fallback={<Headphones size={72} className="text-ink-100" aria-hidden="true" />}
           />
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl bg-gold-50 p-6 sm:p-8">
-        <span className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-ink text-xs font-bold text-paper">
+      <div className="relative overflow-hidden rounded-2xl border border-gold/20 bg-ink-600 p-6 sm:p-8">
+        <span className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-xs font-bold text-ink-900">
           New
         </span>
-        <p className="text-xs uppercase tracking-wide text-gold-700">New arrivals</p>
-        <h3 className="mt-2 max-w-[14rem] font-display text-2xl font-800 text-ink-900">
+        <p className="text-xs uppercase tracking-wide text-gold">New arrivals</p>
+        <h3 className="mt-2 max-w-[14rem] font-display text-2xl font-800 text-cream">
           Fresh products just for you
         </h3>
         <Link
           to="/products?sort=newest"
-          className="mt-5 inline-flex rounded-lg border border-ink-900 px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink hover:text-paper"
+          className="mt-5 inline-flex rounded-lg border border-gold px-4 py-2 text-sm font-semibold text-gold hover:bg-gold hover:text-ink-900"
         >
           Shop new arrivals
         </Link>
@@ -51,7 +51,7 @@ export default function PromoBanners() {
             alt={PROMO_IMAGES.newArrivals.alt}
             className="h-full w-full object-contain drop-shadow-xl"
             containerClassName="bg-transparent"
-            fallback={<Sparkle size={72} className="text-gold-100" aria-hidden="true" />}
+            fallback={<Sparkle size={72} className="text-gold" aria-hidden="true" />}
           />
         </div>
       </div>

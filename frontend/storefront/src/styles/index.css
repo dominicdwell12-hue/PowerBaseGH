@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-paper text-ink-900 antialiased;
+    @apply bg-ink-900 text-cream antialiased;
   }
 
   h1,
@@ -30,14 +30,14 @@
      border-radius token) plus a punched "hole" dot, echoing a physical
      market price tag. Used anywhere a price or discount is shown. */
   .price-tag {
-    @apply relative inline-flex items-center gap-1 rounded-tag bg-gold-50
-      px-2.5 py-1 font-tag text-sm font-semibold text-ink-900;
+    @apply relative inline-flex items-center gap-1 rounded-tag bg-ink-600
+      px-2.5 py-1 font-tag text-sm font-semibold text-gold;
   }
 
   .price-tag::before {
     content: '';
     @apply absolute -left-1 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full
-      bg-paper ring-1 ring-gold-400;
+      bg-ink-900 ring-1 ring-gold-400;
   }
 }
 

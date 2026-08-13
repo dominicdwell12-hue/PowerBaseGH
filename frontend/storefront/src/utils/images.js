@@ -11,8 +11,16 @@ function img(id, width = 800) {
 }
 
 export const HERO_IMAGE = {
-  src: img('photo-1550009158-9ebf69173e03', 1000),
-  alt: 'Smart speaker, headphones and electronics staged in a modern home',
+  src: img('photo-1524484485831-a92ffc0de03f', 1000),
+  alt: 'Modern pendant chandelier lighting fixture in a stylish living space',
+};
+
+// Small floating accent shown layered over the hero panel on large screens,
+// echoing the "staged product vignette" look — omitted gracefully on
+// failure/small screens rather than being load-bearing for the layout.
+export const HERO_ACCENT_IMAGE = {
+  src: img('photo-1513506003901-1e6a229e2d15', 500),
+  alt: 'Warm-toned table lamp glowing on a side table',
 };
 
 // Ordered most-specific first so "Phones & Tablets" doesn't get caught by a

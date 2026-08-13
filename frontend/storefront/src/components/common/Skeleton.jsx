@@ -1,10 +1,10 @@
 export function SkeletonBlock({ className = '' }) {
-  return <div className={`animate-pulse rounded-md bg-ink-50 ${className}`} aria-hidden="true" />;
+  return <div className={`animate-pulse rounded-md bg-ink-600 ${className}`} aria-hidden="true" />;
 }
 
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-ink-50 bg-white">
+    <div className="flex flex-col overflow-hidden rounded-xl border border-ink-600 bg-ink-600">
       <SkeletonBlock className="aspect-square w-full rounded-none" />
       <div className="flex flex-col gap-2 p-3">
         <SkeletonBlock className="h-3 w-1/3" />

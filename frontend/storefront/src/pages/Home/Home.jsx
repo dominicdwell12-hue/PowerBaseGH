@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import HeroCarousel from './HeroCarousel.jsx';
-import FeatureIconRow from '../../components/common/FeatureIconRow.jsx';
 import PromoBanners from '../../components/common/PromoBanners.jsx';
 import WhyShopSection from '../../components/common/WhyShopSection.jsx';
 import CategoryCard from '../../components/product/CategoryCard.jsx';
@@ -22,15 +21,26 @@ export default function Home() {
     queryFn: productApi.getFeaturedProducts,
   });
 
+  // No dedicated "deals" endpoint exists in the product API — pull a
+  // regular catalog page and filter client-side for items that already
+  // carry a discountPrice, rather than adding a new backend filter for
+  // what's still a purely presentational homepage section.
+  const dealsQuery = useQuery({
+    queryKey: ['products', 'homeDeals'],
+    queryFn: () => productApi.listProducts({ limit: 24 }),
+  });
+  const dealsProducts = (dealsQuery.data?.items ?? [])
+    .filter((p) => p.discountPrice && Number(p.discountPrice) < Number(p.price))
+    .slice(0, 8);
+
   return (
     <div>
       <HeroCarousel />
-      <FeatureIconRow />
 
       <section className="mx-auto max-w-7xl px-4 pt-16 pb-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-2xl font-700 text-ink-900">Shop by category</h2>
-          <Link to="/products" className="text-sm font-medium text-gold-700 hover:underline">
+          <h2 className="font-display text-2xl font-700 text-cream">Shop by category</h2>
+          <Link to="/products" className="text-sm font-medium text-gold hover:underline">
             View all categories
           </Link>
         </div>
@@ -62,14 +72,30 @@ export default function Home() {
         )}
       </section>
 
+      {/* Hot Deals — only rendered once real discounted products exist,
+          so the section never shows an awkward "no products" empty state */}
+      {dealsProducts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pt-12 pb-4 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-display text-2xl font-700 text-cream">🔥 Hot Deals</h2>
+            <Link to="/products" className="text-sm font-medium text-gold hover:underline">
+              See all
+            </Link>
+          </div>
+          <div className="mt-6">
+            <ProductGrid products={dealsProducts} />
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <PromoBanners />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-2xl font-700 text-ink-900">Featured products</h2>
-          <Link to="/products" className="text-sm font-medium text-gold-700 hover:underline">
+          <h2 className="font-display text-2xl font-700 text-cream">Featured products</h2>
+          <Link to="/products" className="text-sm font-medium text-gold hover:underline">
             See all
           </Link>
         </div>
@@ -82,7 +108,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="border-t border-ink-50">
+      <div className="border-t border-ink-600">
         <WhyShopSection />
       </div>
     </div>

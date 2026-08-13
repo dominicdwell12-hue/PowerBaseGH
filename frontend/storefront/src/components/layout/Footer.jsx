@@ -1,7 +1,12 @@
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth.js';
+
 export default function Footer() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <footer className="mt-16 border-t border-ink-100 bg-ink text-paper">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6 lg:px-8">
+    <footer className="mt-16 border-t border-ink-600 bg-ink-900 text-cream">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div>
           <p className="font-display text-lg font-700">
             PowerBase<span className="text-gold">.</span>Gh
@@ -13,18 +18,33 @@ export default function Footer() {
         </div>
         <div>
           <p className="text-sm font-semibold text-gold">Shop</p>
-          <ul className="mt-2 space-y-1 text-sm text-ink-100">
-            <li>All products</li>
-            <li>Categories</li>
-            <li>Track an order</li>
+          <ul className="mt-2 space-y-1.5 text-sm text-ink-100">
+            <li><Link to="/products" className="hover:text-cream">All products</Link></li>
+            <li><Link to="/products?sort=newest" className="hover:text-cream">New arrivals</Link></li>
+            <li><Link to="/wishlist" className="hover:text-cream">Wishlist</Link></li>
           </ul>
         </div>
         <div>
-          <p className="text-sm font-semibold text-gold">Support</p>
-          <ul className="mt-2 space-y-1 text-sm text-ink-100">
-            <li>Delivery zones &amp; pay on delivery</li>
-            <li>Returns</li>
-            <li>Contact us</li>
+          <p className="text-sm font-semibold text-gold">Customer Care</p>
+          <ul className="mt-2 space-y-1.5 text-sm text-ink-100">
+            <li><Link to="/support" className="hover:text-cream">Contact &amp; support</Link></li>
+            <li><Link to="/orders" className="hover:text-cream">Track an order</Link></li>
+          </ul>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-gold">Account</p>
+          <ul className="mt-2 space-y-1.5 text-sm text-ink-100">
+            {isAuthenticated ? (
+              <>
+                <li><Link to="/profile" className="hover:text-cream">My account</Link></li>
+                <li><Link to="/orders" className="hover:text-cream">My orders</Link></li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/login" className="hover:text-cream">Sign in</Link></li>
+                <li><Link to="/register" className="hover:text-cream">Create an account</Link></li>
+              </>
+            )}
           </ul>
         </div>
       </div>

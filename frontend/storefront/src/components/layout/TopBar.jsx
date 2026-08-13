@@ -2,7 +2,7 @@ import { Truck } from 'lucide-react';
 
 export default function TopBar() {
   return (
-    <div className="bg-ink-900 px-4 py-1.5 text-xs text-ink-100 sm:px-6 lg:px-8">
+    <div className="bg-ink-900 border-b border-ink-600 px-4 py-1.5 text-xs text-ink-100 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <span className="flex items-center gap-1.5">
           <Truck size={14} aria-hidden="true" />

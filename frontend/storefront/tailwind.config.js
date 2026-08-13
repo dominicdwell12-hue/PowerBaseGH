@@ -37,6 +37,13 @@ export default {
         },
         paper: '#F5F4EE', // app background — cool-leaning off-white, not cream
         ash: '#78756C', // muted secondary text
+        cream: '#F7F1E6', // primary text/headings on the dark storefront body
+        magenta: {
+          DEFAULT: '#D6337B', // discount badges, sale pricing accent
+          50: '#FBE4EE',
+          400: '#E3568F',
+          600: '#B92564',
+        },
       },
       fontFamily: {
         display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],

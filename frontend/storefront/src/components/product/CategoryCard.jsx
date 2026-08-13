@@ -30,19 +30,19 @@ export default function CategoryCard({ category }) {
   return (
     <Link
       to={`/products?category=${category.slug}`}
-      className="group overflow-hidden rounded-xl border border-ink-50 bg-white transition-shadow hover:shadow-md"
+      className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-ink-600 bg-ink-600"
     >
-      <div className="aspect-[4/3] overflow-hidden bg-ink-50">
-        <ImageWithFallback
-          src={category.imageUrl ?? image.src}
-          alt={image.alt}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          fallback={<Icon size={40} className="text-ink-400" aria-hidden="true" />}
-        />
-      </div>
-      <div className="p-4">
-        <p className="font-body text-sm font-semibold text-ink-900">{category.name}</p>
-        <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-gold-700">
+      <ImageWithFallback
+        src={category.imageUrl ?? image.src}
+        alt={image.alt}
+        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        containerClassName="bg-ink-600"
+        fallback={<Icon size={40} className="text-ink-100" aria-hidden="true" />}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/10 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-4">
+        <p className="font-body text-sm font-semibold text-cream">{category.name}</p>
+        <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-gold">
           Explore now
           <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>
