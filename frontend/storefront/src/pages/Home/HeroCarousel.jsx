@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Zap, Truck, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Lightbulb, Truck, ArrowRight } from 'lucide-react';
 import ImageWithFallback from '../../components/common/ImageWithFallback.jsx';
 import { HERO_IMAGE, HERO_ACCENT_IMAGE } from '../../utils/images.js';
 
@@ -15,13 +15,13 @@ const SLIDES = [
     icon: ShoppingBag,
   },
   {
-    eyebrow: 'This week',
-    headline: 'Up to',
-    highlight: '25% off',
-    tail: 'electronics.',
-    body: 'Phones, fans, and audio — while stock lasts.',
-    cta: { label: 'Shop electronics', to: '/products' },
-    icon: Zap,
+    eyebrow: '23 fixture types, one roof',
+    headline: 'Light,',
+    highlight: 'considered.',
+    tail: '',
+    body: 'From the chandelier that anchors a dining room to the nightlight that guides you to bed — the full lighting catalog, in stock.',
+    cta: { label: 'Shop lighting', to: '/products' },
+    icon: Lightbulb,
   },
   {
     eyebrow: 'Kumasi customers',

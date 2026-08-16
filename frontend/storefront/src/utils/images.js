@@ -25,8 +25,65 @@ export const HERO_ACCENT_IMAGE = {
 
 // Ordered most-specific first so "Phones & Tablets" doesn't get caught by a
 // looser "electronics" match, and "Appliances" doesn't fall into
-// "Home & Living".
+// "Home & Living". Lighting rules come first since it's the real catalog
+// (see /Items) — most of these categories won't have a real photo uploaded
+// yet, so this is what shows until the admin adds one.
 const CATEGORY_IMAGE_RULES = [
+  {
+    test: /chandelier/i,
+    src: img('photo-1543198126-42967f3f9c2c'),
+    alt: 'Crystal chandelier hanging in a dining room',
+  },
+  {
+    test: /pendant|island light/i,
+    src: img('photo-1524484485831-a92ffc0de03f'),
+    alt: 'Modern pendant lights hanging over a kitchen island',
+  },
+  {
+    test: /flush/i,
+    src: img('photo-1565538810643-b5bdb714032a'),
+    alt: 'Flush-mount ceiling light fixture',
+  },
+  {
+    test: /track|recessed|cove/i,
+    src: img('photo-1513506003901-1e6a229e2d15'),
+    alt: 'Recessed and track lighting in a modern ceiling',
+  },
+  {
+    test: /sconce|picture light|vanity/i,
+    src: img('photo-1615529182904-14819c35db37'),
+    alt: 'Wall sconce lighting fixture mounted beside a mirror',
+  },
+  {
+    test: /swing[\s-]?arm|desk lamp/i,
+    src: img('photo-1507473885765-e6ed057f782c'),
+    alt: 'Articulated desk lamp on a work surface',
+  },
+  {
+    test: /table lamp|buffet lamp/i,
+    src: img('photo-1513506003901-1e6a229e2d15'),
+    alt: 'Table lamp glowing warmly on a side table',
+  },
+  {
+    test: /floor lamp|torchiere/i,
+    src: img('photo-1540932239986-30128078f3c5'),
+    alt: 'Tall floor lamp beside a sofa',
+  },
+  {
+    test: /under[\s-]?cabinet|strip|tape|puck/i,
+    src: img('photo-1556911220-bff31c812dba'),
+    alt: 'LED strip lighting under kitchen cabinets',
+  },
+  {
+    test: /string light|rope light/i,
+    src: img('photo-1482849297070-f4fae2173efe'),
+    alt: 'String lights glowing outdoors at dusk',
+  },
+  {
+    test: /step light|nightlight/i,
+    src: img('photo-1519710164239-da123dc03ef4'),
+    alt: 'Warm low-level light illuminating a staircase',
+  },
   {
     test: /phone|tablet|mobile/i,
     src: img('photo-1580910051074-3eb694886505'),

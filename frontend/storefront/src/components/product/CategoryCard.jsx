@@ -1,31 +1,21 @@
 import { Link } from 'react-router-dom';
-import {
-  Smartphone,
-  Shirt,
-  Sparkles,
-  Sofa,
-  Refrigerator,
-  Package,
-  ArrowRight,
-} from 'lucide-react';
+import { Package, ArrowRight } from 'lucide-react';
 import ImageWithFallback from '../common/ImageWithFallback.jsx';
+import CategoryIcon, { isLightingCategory } from './CategoryIcon.jsx';
 import { getCategoryImage } from '../../utils/images.js';
 
-// Used as the graceful fallback if a category's photo fails to load —
-// picks a representative icon by keyword so the tile still reads clearly.
-function pickIcon(name = '') {
-  const n = name.toLowerCase();
-  if (n.includes('appliance') || n.includes('kitchen')) return Refrigerator;
-  if (n.includes('phone') || n.includes('tablet') || n.includes('electronic')) return Smartphone;
-  if (n.includes('fashion') || n.includes('cloth') || n.includes('wear')) return Shirt;
-  if (n.includes('beauty') || n.includes('health')) return Sparkles;
-  if (n.includes('home') || n.includes('living') || n.includes('furniture')) return Sofa;
-  return Package;
-}
-
 export default function CategoryCard({ category }) {
-  const Icon = pickIcon(category.name);
   const image = getCategoryImage(category.name);
+  const lighting = isLightingCategory(category.name);
+
+  // Lighting categories (the actual catalog) get their own hand-drawn,
+  // hover-lit icon; anything else still falls back to a plain Package icon
+  // rather than guessing a lucide icon that may not exist for it.
+  const fallback = lighting ? (
+    <CategoryIcon name={category.name} className="h-11 w-11 text-ink-100" />
+  ) : (
+    <Package size={40} className="text-ink-100" aria-hidden="true" />
+  );
 
   return (
     <Link
@@ -37,7 +27,7 @@ export default function CategoryCard({ category }) {
         alt={image.alt}
         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         containerClassName="bg-ink-600"
-        fallback={<Icon size={40} className="text-ink-100" aria-hidden="true" />}
+        fallback={fallback}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/10 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-4">

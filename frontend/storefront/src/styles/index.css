@@ -39,6 +39,22 @@
     @apply absolute -left-1 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full
       bg-ink-900 ring-1 ring-gold-400;
   }
+
+  /* Second signature element, specific to the lighting catalog: every
+     fixture icon (see CategoryIcon.jsx) has a bulb that actually turns on.
+     Default is unlit ash; any ancestor with `.group` hovered/focused lights
+     it gold with a soft glow — same mechanic everywhere it's used, so it
+     reads as one idea rather than a per-component hover effect. */
+  .category-icon-bulb {
+    fill: theme('colors.ash');
+    transition: fill 0.4s ease, filter 0.4s ease;
+  }
+
+  .group:hover .category-icon-bulb,
+  .group:focus-visible .category-icon-bulb {
+    fill: theme('colors.gold.400');
+    filter: drop-shadow(0 0 5px theme('colors.gold.DEFAULT'));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
