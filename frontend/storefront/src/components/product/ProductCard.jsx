@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Heart, Plus } from 'lucide-react';
+import { Heart, Plus } from 'lucide-react';
 import PriceTag from '../common/PriceTag.jsx';
 import ImageWithFallback from '../common/ImageWithFallback.jsx';
+import CategoryIcon, { isLightingCategory } from './CategoryIcon.jsx';
 import { useCart } from '../../hooks/useCart.js';
 import { useWishlist } from '../../hooks/useWishlist.js';
 import { useAuth } from '../../hooks/useAuth.js';
@@ -9,6 +10,12 @@ import { useAuth } from '../../hooks/useAuth.js';
 export default function ProductCard({ product }) {
   const primaryImage = product.images?.find((img) => img.isPrimary) ?? product.images?.[0];
   const imageUrl = primaryImage?.imageUrl;
+  // Same fallback treatment as CategoryCard — a lit fixture icon beats a
+  // broken-image glyph while real product photography is still pending.
+  const lighting = isLightingCategory(product.category?.name);
+  const imageFallback = lighting ? (
+    <CategoryIcon name={product.category?.name} className="h-16 w-16 text-ink-100" />
+  ) : undefined;
   const outOfStock = product.stockQuantity <= 0;
   const lowStock = !outOfStock && product.stockQuantity <= 5;
   const hasDiscount = product.discountPrice && Number(product.discountPrice) < Number(product.price);
@@ -60,7 +67,7 @@ export default function ProductCard({ product }) {
           alt={product.name}
           className="h-full w-full object-cover transition-transform duration-300
             group-hover:scale-105"
-          fallback={<Package size={32} className="text-ink-100" aria-hidden="true" />}
+          fallback={imageFallback}
         />
 
         {hasDiscount && (

@@ -140,6 +140,109 @@ async function main() {
   }
   console.log('Lighting categories seeded (4 groups, 23 fixture types)');
 
+  // 6. Starter products — real fixtures the business is actually sourcing,
+  // priced from supplier quotes on file (GHS). Deliberately shipped with NO
+  // ProductImage rows: the reference photos for these are wholesaler/
+  // marketplace catalog images (visible third-party watermarks, foreign
+  // spec sheets) — not ours to publish as our own product photography.
+  // The storefront already renders a lit category icon in place of a
+  // missing photo (see CategoryIcon.jsx), so these display cleanly until
+  // real photos are shot or licensed. Prices are placeholders — update them
+  // in the admin dashboard once landed cost + margin is confirmed.
+  const STARTER_PRODUCTS = [
+    {
+      name: 'Butterfly LED Flush Mount Ceiling Light',
+      categorySlug: 'flush-mounts',
+      price: 155.0,
+      sku: 'PB-FL-001',
+      brand: null,
+      description:
+        'Round flush-mount LED ceiling light with a butterfly-pattern acrylic diffuser. ' +
+        'Dimmable, low-profile design suited to bedrooms and low-ceiling rooms.',
+    },
+    {
+      name: 'Infinity Loop LED Pendant Light',
+      categorySlug: 'pendant-lights',
+      price: 300.0,
+      sku: 'PB-PD-002',
+      brand: null,
+      description:
+        'Sculptural figure-eight LED pendant in matte white, hung from a slim ceiling canopy. ' +
+        'A statement piece for dining tables and kitchen islands.',
+    },
+    {
+      name: 'Triple Globe Gold Ring Chandelier',
+      categorySlug: 'chandeliers',
+      price: 350.0,
+      sku: 'PB-CH-003',
+      brand: null,
+      description:
+        'Gold-finish ring chandelier with three cascading opal glass globes at staggered heights. ' +
+        'Warm-white LED, suited to dining rooms and entryways.',
+    },
+    {
+      name: 'Starlight Gold Ring Chandelier',
+      categorySlug: 'chandeliers',
+      price: 430.0,
+      sku: 'PB-CH-004',
+      brand: null,
+      description:
+        'Multi-ring gold chandelier with a built-in star-and-moon ceiling light projector effect. ' +
+        'A bold centerpiece for living rooms and dining areas.',
+    },
+    {
+      name: 'Double Ring Crystal Orb Pendant Light',
+      categorySlug: 'pendant-lights',
+      price: 450.0,
+      sku: 'PB-PD-005',
+      brand: null,
+      description:
+        'Two-tier black-and-white LED ring pendant with a crystal orb centerpiece. ' +
+        'Modern profile that works well over islands or dining tables.',
+    },
+    {
+      name: 'Twin Crystal Drum Chandelier',
+      categorySlug: 'chandeliers',
+      price: 480.0,
+      sku: 'PB-CH-006',
+      brand: null,
+      description:
+        'Abstract dual-ring chandelier with two crystal-beaded drum shades and crystal flower accents. ' +
+        'A softer, glam take on a modern chandelier for dining rooms.',
+    },
+  ];
+
+  for (const p of STARTER_PRODUCTS) {
+    const category = await prisma.category.findUnique({ where: { slug: p.categorySlug } });
+    if (!category) {
+      console.warn(`Skipped "${p.name}" — category "${p.categorySlug}" not found`);
+      continue;
+    }
+
+    await prisma.product.upsert({
+      where: { sku: p.sku },
+      update: {
+        name: p.name,
+        categoryId: category.id,
+        price: p.price,
+        brand: p.brand,
+        description: p.description,
+      },
+      create: {
+        name: p.name,
+        slug: slugify(p.name),
+        categoryId: category.id,
+        vendorId: 1,
+        price: p.price,
+        sku: p.sku,
+        brand: p.brand,
+        description: p.description,
+        stockQuantity: 10,
+      },
+    });
+  }
+  console.log(`Starter products seeded (${STARTER_PRODUCTS.length}) — no photos yet, prices are placeholders`);
+
   console.log('Seeding complete.');
 }
 
