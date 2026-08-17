@@ -4,13 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Menu, ChevronDown } from 'lucide-react';
 import * as categoryApi from '../../api/categoryApi.js';
 
-export const LINKS = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/products', label: 'Shop' },
-  // No dedicated "on sale" filter exists in the product API yet — this
-  // links to the plain catalog for now rather than inventing a filter
-  // the backend doesn't support.
-  { to: '/products', label: 'Deals' },
+// Utility links that aren't categories — kept separate from the dynamic
+// category links below so this file never has to guess at category names.
+const UTILITY_LINKS = [
   { to: '/products?sort=newest', label: 'New Arrivals' },
   { to: '/orders', label: 'Track Order' },
   { to: '/support', label: 'Support' },
@@ -21,6 +17,7 @@ export default function CategoryNav() {
   // Shares the same 'categories' cache key Home.jsx already uses — this
   // won't trigger a second network request once either has fetched it.
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: categoryApi.listCategories });
+  const topLevel = categoriesQuery.data ?? [];
 
   return (
     <div className="relative hidden border-b border-ink-600 bg-ink-900 md:block">
@@ -35,15 +32,33 @@ export default function CategoryNav() {
           <ChevronDown size={14} aria-hidden="true" />
         </button>
 
+        {/* Primary nav = the real top-level categories, however many exist
+            — not a hardcoded list of names, so this never drifts out of
+            sync with what's actually in the database. */}
         <nav className="hidden items-center gap-6 md:flex">
-          {LINKS.map((link) => (
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `font-medium ${isActive ? 'text-gold' : 'text-ink-100 hover:text-gold'}`}
+          >
+            Home
+          </NavLink>
+
+          {topLevel.map((category) => (
+            <NavLink
+              key={category.id}
+              to={`/products?category=${category.slug}`}
+              className={({ isActive }) => `font-medium ${isActive ? 'text-gold' : 'text-ink-100 hover:text-gold'}`}
+            >
+              {category.name}
+            </NavLink>
+          ))}
+
+          {UTILITY_LINKS.map((link) => (
             <NavLink
               key={link.label}
               to={link.to}
-              end={link.end}
-              className={({ isActive }) =>
-                `font-medium ${isActive ? 'text-gold' : 'text-ink-100 hover:text-gold'}`
-              }
+              className={({ isActive }) => `font-medium ${isActive ? 'text-gold' : 'text-ink-100 hover:text-gold'}`}
             >
               {link.label}
             </NavLink>
@@ -52,22 +67,35 @@ export default function CategoryNav() {
       </div>
 
       {open && (
-        <div className="absolute left-4 top-full z-30 w-64 rounded-b-xl border border-t-0 border-ink-600 bg-ink-600 shadow-lg sm:left-6 lg:left-8">
+        <div className="absolute left-4 top-full z-30 w-72 rounded-b-xl border border-t-0 border-ink-600 bg-ink-600 shadow-lg sm:left-6 lg:left-8">
           <ul className="py-2">
-            {categoriesQuery.data?.map((category) => (
+            {topLevel.map((category) => (
               <li key={category.id}>
                 <Link
                   to={`/products?category=${category.slug}`}
                   onClick={() => setOpen(false)}
-                  className="block px-4 py-2 text-sm text-cream hover:bg-ink-400/30"
+                  className="flex items-center justify-between px-4 py-2 text-sm font-medium text-cream hover:bg-ink-400/30"
                 >
                   {category.name}
                 </Link>
+                {category.children?.length > 0 && (
+                  <ul className="pb-1">
+                    {category.children.map((child) => (
+                      <li key={child.id}>
+                        <Link
+                          to={`/products?category=${child.slug}`}
+                          onClick={() => setOpen(false)}
+                          className="block px-6 py-1.5 text-sm text-ink-100 hover:bg-ink-400/30 hover:text-cream"
+                        >
+                          {child.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
-            {!categoriesQuery.data?.length && (
-              <li className="px-4 py-2 text-sm text-ink-100">No categories yet</li>
-            )}
+            {!topLevel.length && <li className="px-4 py-2 text-sm text-ink-100">No categories yet</li>}
           </ul>
         </div>
       )}

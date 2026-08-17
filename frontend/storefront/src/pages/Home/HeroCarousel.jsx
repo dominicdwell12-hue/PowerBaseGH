@@ -1,58 +1,21 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Lightbulb, Truck, ArrowRight } from 'lucide-react';
-import ImageWithFallback from '../../components/common/ImageWithFallback.jsx';
-import { HERO_IMAGE, HERO_ACCENT_IMAGE } from '../../utils/images.js';
+import { ArrowRight, Truck } from 'lucide-react';
 
-const SLIDES = [
-  {
-    eyebrow: 'Nationwide delivery',
-    headline: 'Everything you need, delivered',
-    highlight: 'anywhere',
-    tail: 'in Ghana.',
-    body: 'Shop quality products across all categories. Pay on delivery in Kumasi, or pay by card and Mobile Money everywhere else.',
-    cta: { label: 'Shop all products', to: '/products' },
-    icon: ShoppingBag,
-  },
-  {
-    eyebrow: '23 fixture types, one roof',
-    headline: 'Light,',
-    highlight: 'considered.',
-    tail: '',
-    body: 'From the chandelier that anchors a dining room to the nightlight that guides you to bed — the full lighting catalog, in stock.',
-    cta: { label: 'Shop lighting', to: '/products' },
-    icon: Lightbulb,
-  },
-  {
-    eyebrow: 'Kumasi customers',
-    headline: 'Pay',
-    highlight: 'when it arrives',
-    tail: '.',
-    body: 'Pay-on-delivery is available for every Kumasi address, checked automatically at checkout.',
-    cta: { label: 'Shop all products', to: '/products' },
-    icon: Truck,
-  },
-];
-
-export default function HeroCarousel() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return undefined;
-
-    const timer = setInterval(() => {
-      setActive((current) => (current + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const slide = SLIDES[active];
-  const Icon = slide.icon;
-
+/**
+ * A single strong hero, not a slide carousel — matches the "Light,
+ * considered." reference direction, restyled entirely in PowerBase's own
+ * ink/gold tokens (no new palette). The pendant is hand-drawn SVG brand
+ * illustration, not a product photo or stock image — nothing here claims
+ * to depict a real, purchasable fixture, and the copy below is intentionally
+ * generic ("the products PowerBase carries") rather than naming a specific
+ * category, since PowerBase isn't lighting-only.
+ *
+ * `categoryCount` comes from Home.jsx's real categoriesQuery — this line
+ * is computed from the live API response, never a hardcoded number.
+ */
+export default function HeroCarousel({ categoryCount }) {
   return (
     <section className="relative overflow-hidden bg-ink-900 text-cream">
-      {/* Faint radial gold glow behind the whole hero for a premium, lit-from-within feel */}
       <div
         className="pointer-events-none absolute -top-24 right-0 h-[32rem] w-[32rem] rounded-full bg-gold/10 blur-3xl"
         aria-hidden="true"
@@ -60,70 +23,51 @@ export default function HeroCarousel() {
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24 lg:px-8">
         <div>
           <p className="inline-flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-gold">
-            <Icon size={14} aria-hidden="true" />
-            {slide.eyebrow}
+            <span className="h-px w-6 bg-gold" aria-hidden="true" />
+            {categoryCount > 0 ? `${categoryCount} ways to shop PowerBase` : 'PowerBase Gh'}
           </p>
-          <h1 className="mt-4 max-w-xl font-display text-4xl font-800 leading-[1.1] sm:text-5xl lg:text-6xl">
-            {slide.headline} <em className="text-gold not-italic">{slide.highlight}</em> {slide.tail}
+          <h1 className="mt-4 max-w-xl font-display text-4xl font-800 leading-[1.08] sm:text-5xl lg:text-6xl">
+            Quality, <em className="font-serifAccent italic font-500 text-gold">delivered.</em>
           </h1>
-          <p className="mt-5 max-w-md text-ink-100">{slide.body}</p>
-          <Link
-            to={slide.cta.to}
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-3
-              font-body text-sm font-semibold uppercase tracking-wide text-ink-900
-              transition-colors hover:bg-gold-700"
-          >
-            {slide.cta.label}
-            <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-
-          <div className="mt-10 flex gap-2" role="tablist" aria-label="Featured promotions">
-            {SLIDES.map((s, index) => (
-              <button
-                key={s.headline + s.highlight}
-                type="button"
-                role="tab"
-                aria-selected={index === active}
-                aria-label={`Show promotion ${index + 1}`}
-                onClick={() => setActive(index)}
-                className={`h-1.5 rounded-full transition-all ${
-                  index === active ? 'w-8 bg-gold' : 'w-4 bg-ink-400'
-                }`}
-              />
-            ))}
+          <p className="mt-5 max-w-md text-ink-100">
+            Real products, real prices in cedis, browsable by what you're actually shopping
+            for — not a generic aisle. Pay on delivery in Kumasi, or pay by card and Mobile
+            Money anywhere else in Ghana.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-3
+                font-body text-sm font-semibold uppercase tracking-wide text-ink-900
+                transition-colors hover:bg-gold-700"
+            >
+              Shop all products
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+            <span className="inline-flex items-center gap-2 text-sm text-ink-100">
+              <Truck size={16} className="text-gold" aria-hidden="true" />
+              Nationwide delivery across Ghana
+            </span>
           </div>
         </div>
 
-        <div className="relative hidden lg:block">
-          <div
-            className="aspect-square overflow-hidden rounded-2xl border border-gold/20 bg-ink-600
-              shadow-[0_0_60px_-15px_rgba(201,138,44,0.35)]"
-          >
-            <ImageWithFallback
-              src={HERO_IMAGE.src}
-              alt={HERO_IMAGE.alt}
-              loading="eager"
-              fetchPriority="high"
-              className="h-full w-full object-cover"
-              containerClassName="bg-ink-600"
-              fallback={<Icon size={96} className="text-gold" aria-hidden="true" />}
-            />
-          </div>
-
-          {/* Small floating accent card — purely decorative; degrades to a
-              plain gold dot rather than a broken-image icon if it fails */}
-          <div
-            className="absolute -bottom-6 -left-8 hidden h-32 w-32 overflow-hidden rounded-xl
-              border border-gold/30 bg-ink-600 shadow-xl xl:block"
-          >
-            <ImageWithFallback
-              src={HERO_ACCENT_IMAGE.src}
-              alt={HERO_ACCENT_IMAGE.alt}
-              className="h-full w-full object-cover"
-              containerClassName="bg-ink-600"
-              fallback={<span className="h-3 w-3 rounded-full bg-gold" aria-hidden="true" />}
-            />
-          </div>
+        {/* Decorative brand illustration — a drawn pendant light, not a
+            photo of any real product. Lights up once on load; respects
+            prefers-reduced-motion. */}
+        <div className="relative hidden items-start justify-center lg:flex" aria-hidden="true">
+          <svg viewBox="0 0 220 300" width="100%" height="300" style={{ maxWidth: 320 }}>
+            <g className="hero-pendant-swing">
+              <line x1="110" y1="0" x2="110" y2="120" stroke="#4A5978" strokeWidth="2" />
+              <path
+                d="M65 120 L155 120 L182 205 Q110 228 38 205 Z"
+                fill="#232F4B"
+                stroke="#4A5978"
+                strokeWidth="1.4"
+                className="hero-pendant-shade"
+              />
+              <circle cx="110" cy="166" r="11" className="hero-pendant-bulb" />
+            </g>
+          </svg>
         </div>
       </div>
     </section>

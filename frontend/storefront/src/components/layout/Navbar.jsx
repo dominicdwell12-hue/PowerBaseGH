@@ -4,8 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Heart, ShoppingCart, User, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../../hooks/useCart.js';
 import { useAuth } from '../../hooks/useAuth.js';
-import { LINKS } from './CategoryNav.jsx';
 import * as categoryApi from '../../api/categoryApi.js';
+
+// Non-category utility links for the mobile menu — real categories are
+// rendered separately below from the live API, as chips.
+const MOBILE_UTILITY_LINKS = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/products', label: 'Shop' },
+  { to: '/products?sort=newest', label: 'New Arrivals' },
+  { to: '/orders', label: 'Track Order' },
+  { to: '/support', label: 'Support' },
+];
 
 export default function Navbar() {
   const { itemCount } = useCart();
@@ -118,7 +127,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="border-t border-ink-600 px-4 py-4 sm:hidden">
           <nav className="flex flex-col gap-3 text-sm">
-            {LINKS.map((link) => (
+            {MOBILE_UTILITY_LINKS.map((link) => (
               <NavLink
                 key={link.label}
                 to={link.to}

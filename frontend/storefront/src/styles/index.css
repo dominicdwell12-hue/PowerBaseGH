@@ -55,6 +55,49 @@
     fill: theme('colors.gold.400');
     filter: drop-shadow(0 0 5px theme('colors.gold.DEFAULT'));
   }
+
+  /* Home hero's illustrated pendant — lights up on load, gentle swing
+     loop. Purely decorative brand mark, not a product image. */
+  .hero-pendant-bulb {
+    fill: theme('colors.gold.400');
+    filter: drop-shadow(0 0 22px rgba(217, 162, 80, 0.85));
+    animation: hero-pendant-glow-in 1.4s ease-out both;
+  }
+
+  .hero-pendant-shade {
+    animation: hero-pendant-shade-in 1.4s ease-out both;
+  }
+
+  .hero-pendant-swing {
+    transform-origin: 110px 0px;
+    animation: hero-pendant-swing 4.5s ease-in-out 1.4s infinite;
+  }
+
+  @keyframes hero-pendant-glow-in {
+    from {
+      fill: #5a4c2c;
+      filter: none;
+    }
+  }
+
+  @keyframes hero-pendant-shade-in {
+    from {
+      filter: none;
+    }
+    to {
+      filter: drop-shadow(0 16px 40px rgba(217, 162, 80, 0.14));
+    }
+  }
+
+  @keyframes hero-pendant-swing {
+    0%,
+    100% {
+      transform: rotate(-1.1deg);
+    }
+    50% {
+      transform: rotate(1.1deg);
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

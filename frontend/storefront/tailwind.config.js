@@ -49,6 +49,9 @@ export default {
         display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         tag: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        // Used sparingly — one accent word in hero/section headlines
+        // (see Home hero, ProductListing group intro), never body copy.
+        serifAccent: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
       },
       borderRadius: {
         tag: '4px 12px 4px 12px', // signature price-tag notch, see PriceTag component
