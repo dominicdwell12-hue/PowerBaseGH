@@ -72,23 +72,73 @@ async function main() {
   }
   console.log('Delivery zones seeded (Kumasi = Pay on Delivery enabled)');
 
-  // 5. Starter categories so the storefront isn't empty on first run.
-  const categories = [
-    { name: 'Electronics', slug: 'electronics' },
-    { name: 'Phones & Tablets', slug: 'phones-tablets' },
-    { name: 'Fashion', slug: 'fashion' },
-    { name: 'Home & Living', slug: 'home-living' },
-    { name: 'Health & Beauty', slug: 'health-beauty' },
+  // 5. Lighting catalog — the real taxonomy (see
+  // frontend/storefront/src/data/lightingCategories.js, which this must be
+  // kept in sync with). Modeled as 4 parent categories the storefront can
+  // browse by "part of the room", each with its real fixture types as
+  // subcategories — using the self-relation already defined on Category
+  // (parentId/children) rather than inventing a separate grouping concept.
+  function slugify(name) {
+    return name
+      .toLowerCase()
+      .replace(/\//g, ' ')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  const LIGHTING_TAXONOMY = [
+    {
+      group: 'Ceiling & Overhead',
+      items: [
+        'Chandeliers',
+        'Pendant Lights',
+        'Flush Mounts',
+        'Semi-Flush Mounts',
+        'Track Lighting',
+        'Recessed Lights',
+        'Island Lights',
+        'Cove Lighting',
+      ],
+    },
+    {
+      group: 'Wall-Mounted',
+      items: ['Wall Sconces', 'Picture Lights', 'Swing-Arm Wall Lights', 'Vanity Lights'],
+    },
+    {
+      group: 'Table & Floor',
+      items: ['Table Lamps', 'Floor Lamps', 'Torchiere Lamps', 'Buffet Lamps', 'Desk Lamps'],
+    },
+    {
+      group: 'Accent, Task & Path',
+      items: [
+        'Under-Cabinet Lights',
+        'String Lights',
+        'Rope Lights',
+        'Strip / Tape Lights',
+        'Puck Lights',
+        'Step Lights',
+        'Nightlights',
+      ],
+    },
   ];
 
-  for (const cat of categories) {
-    await prisma.category.upsert({
-      where: { slug: cat.slug },
-      update: {},
-      create: cat,
+  for (const { group, items } of LIGHTING_TAXONOMY) {
+    const parent = await prisma.category.upsert({
+      where: { slug: slugify(group) },
+      update: { name: group },
+      create: { name: group, slug: slugify(group) },
     });
+
+    for (const itemName of items) {
+      const slug = slugify(itemName);
+      await prisma.category.upsert({
+        where: { slug },
+        update: { name: itemName, parentId: parent.id },
+        create: { name: itemName, slug, parentId: parent.id },
+      });
+    }
   }
-  console.log('Starter categories seeded');
+  console.log('Lighting categories seeded (4 groups, 23 fixture types)');
 
   console.log('Seeding complete.');
 }
