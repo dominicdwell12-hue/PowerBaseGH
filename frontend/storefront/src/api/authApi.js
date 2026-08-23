@@ -24,3 +24,14 @@ export async function refresh() {
   const { data } = await axiosClient.post('/auth/refresh');
   return data.data; // { accessToken }
 }
+
+export async function forgotPassword(email) {
+  const { data } = await axiosClient.post('/auth/forgot-password', { email });
+  return data; // { success, message }
+}
+
+export async function resetPassword(payload) {
+  // payload: { email, token, newPassword, confirmPassword }
+  const { data } = await axiosClient.post('/auth/reset-password', payload);
+  return data; // { success, message }
+}

@@ -59,6 +59,14 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const forgotPassword = useCallback(async (email) => {
+    return authApi.forgotPassword(email);
+  }, []);
+
+  const resetPassword = useCallback(async (payload) => {
+    return authApi.resetPassword(payload);
+  }, []);
+
   const value = useMemo(
     () => ({
       user,
@@ -67,9 +75,11 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      forgotPassword,
+      resetPassword,
       setUser,
     }),
-    [user, isLoading, login, register, logout]
+    [user, isLoading, login, register, logout, forgotPassword, resetPassword]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

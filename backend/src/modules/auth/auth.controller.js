@@ -71,4 +71,23 @@ async function me(req, res, next) {
   }
 }
 
-module.exports = { register, login, adminLogin, refresh, logout, me };
+async function forgotPassword(req, res, next) {
+  try {
+    await authService.forgotPassword(req.body.email);
+    // Same response whether or not the email exists — see auth.service.js.
+    return success(res, { message: 'If an account exists for that email, a reset link has been sent.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    await authService.resetPassword(req.body);
+    return success(res, { message: 'Password reset successfully' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, adminLogin, refresh, logout, me, forgotPassword, resetPassword };

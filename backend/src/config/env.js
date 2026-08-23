@@ -33,6 +33,16 @@ module.exports = {
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
 
+  email: {
+    resendApiKey: process.env.RESEND_API_KEY,
+    from: process.env.EMAIL_FROM || 'PowerBase.Gh <onboarding@resend.dev>',
+  },
+
+  // Where the storefront's reset-password page lives. The backend never
+  // hardcodes a domain — this makes it trivial to point at a staging or
+  // production frontend just by changing the env var.
+  resetPasswordUrl: process.env.RESET_PASSWORD_URL || 'http://localhost:5173/reset-password',
+
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     apiKey: process.env.CLOUDINARY_API_KEY,

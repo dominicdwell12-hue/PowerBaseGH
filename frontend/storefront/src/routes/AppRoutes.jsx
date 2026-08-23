@@ -15,6 +15,8 @@ import Wishlist from '../pages/Wishlist/Wishlist.jsx';
 import Profile from '../pages/Profile/Profile.jsx';
 import Login from '../pages/Auth/Login.jsx';
 import Register from '../pages/Auth/Register.jsx';
+import ForgotPassword from '../pages/Auth/ForgotPassword.jsx';
+import ResetPassword from '../pages/Auth/ResetPassword.jsx';
 import Support from '../pages/Support/Support.jsx';
 import NotFound from '../pages/NotFound/NotFound.jsx';
 
@@ -28,6 +30,8 @@ export default function AppRoutes() {
         <Route path="cart" element={<Cart />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="support" element={<Support />} />
 
         {/* Everything below needs a signed-in customer */}

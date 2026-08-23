@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 const authController = require('./auth.controller');
 const { authenticate } = require('./auth.middleware');
 const validateRequest = require('../../middlewares/validateRequest');
-const { registerSchema, loginSchema } = require('./auth.validation');
+const { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } = require('./auth.validation');
 
 const router = express.Router();
 
@@ -26,7 +26,29 @@ const registerLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Same tight limiter shape as login — password-reset requests are a
+// classic target for both enumeration probing and email-bombing abuse.
+const passwordResetLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 router.post('/register', registerLimiter, validateRequest(registerSchema), authController.register);
+router.post(
+  '/forgot-password',
+  passwordResetLimiter,
+  validateRequest(forgotPasswordSchema),
+  authController.forgotPassword
+);
+router.post(
+  '/reset-password',
+  passwordResetLimiter,
+  validateRequest(resetPasswordSchema),
+  authController.resetPassword
+);
 router.post('/login', loginLimiter, validateRequest(loginSchema), authController.login);
 router.post('/admin/login', loginLimiter, validateRequest(loginSchema), authController.adminLogin);
 router.post('/refresh', authController.refresh);
