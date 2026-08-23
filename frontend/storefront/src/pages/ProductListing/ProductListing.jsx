@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import FilterSidebar from '../../components/product/FilterSidebar.jsx';
 import ProductGrid from '../../components/product/ProductGrid.jsx';
 import CategoryCard from '../../components/product/CategoryCard.jsx';
@@ -22,6 +22,7 @@ const SORT_OPTIONS = [
 
 export default function ProductListing() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const filters = useMemo(
     () => ({
@@ -68,6 +69,8 @@ export default function ProductListing() {
     enabled: !isGroupView,
   });
 
+  const activeFilterCount = [filters.category, filters.minPrice, filters.maxPrice].filter(Boolean).length;
+
   if (isGroupView) {
     const groupBlurb = getCategoryBlurb(activeCategory.name);
     return (
@@ -91,37 +94,73 @@ export default function ProductListing() {
     );
   }
 
+  const total = productsQuery.data?.pagination?.total;
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-display text-2xl font-800 text-ink-900">
-        {filters.search ? `Results for "${filters.search}"` : activeCategoryName || 'All products'}
-      </h1>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-ink-100">
+        <Link to="/" className="hover:text-gold">Home</Link>
+        <ChevronRight size={12} aria-hidden="true" />
+        <span className="text-cream">Shop</span>
+      </nav>
+
+      <div className="mt-2 flex items-baseline gap-3">
+        <h1 className="font-display text-2xl font-800 text-cream sm:text-3xl">
+          {filters.search ? `Results for "${filters.search}"` : activeCategoryName || 'All Products'}
+        </h1>
+        {typeof total === 'number' && (
+          <span className="text-sm text-ink-100">({total} {total === 1 ? 'item' : 'items'})</span>
+        )}
+      </div>
+
+      {/* Controls row: Filter button + Sort dropdown */}
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setFilterOpen(true)}
+          className="inline-flex items-center gap-2 rounded-lg border border-ink-600 bg-ink-600 px-3.5 py-2
+            text-sm font-medium text-cream hover:border-gold/50 lg:hidden"
+        >
+          <SlidersHorizontal size={15} aria-hidden="true" />
+          Filter
+          {activeFilterCount > 0 && (
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-ink-900">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
+        <span className="hidden text-sm text-ink-100 lg:inline">
+          {activeFilterCount > 0 ? `${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''} applied` : 'Refine your search'}
+        </span>
+
+        <label className="ml-auto flex items-center gap-2 text-sm text-ink-100">
+          <span className="hidden sm:inline">Sort by</span>
+          <select
+            value={filters.sort ?? ''}
+            onChange={(e) => updateFilters({ sort: e.target.value })}
+            className="rounded-lg border border-ink-600 bg-ink-600 px-2.5 py-2 text-sm text-cream
+              focus:outline-none focus:ring-2 focus:ring-gold"
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       <div className="mt-6 flex flex-col gap-8 lg:flex-row">
         <FilterSidebar
           categories={categoriesQuery.data}
           filters={filters}
           onChange={updateFilters}
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
         />
 
         <div className="flex-1">
-          <div className="mb-4 flex items-center justify-end">
-            <label className="flex items-center gap-2 text-sm text-ash">
-              Sort by
-              <select
-                value={filters.sort ?? ''}
-                onChange={(e) => updateFilters({ sort: e.target.value })}
-                className="rounded-lg border border-ink-100 px-2 py-1.5 text-sm text-ink-900"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
           {productsQuery.isLoading && <ProductGridSkeleton count={12} />}
 
           {productsQuery.isError && (

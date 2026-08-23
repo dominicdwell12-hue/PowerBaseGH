@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import HeroCarousel from './HeroCarousel.jsx';
 import PromoBanners from '../../components/common/PromoBanners.jsx';
 import WhyShopSection from '../../components/common/WhyShopSection.jsx';
-import CategoryCard from '../../components/product/CategoryCard.jsx';
+import CategoryTile from '../../components/product/CategoryTile.jsx';
 import ProductGrid from '../../components/product/ProductGrid.jsx';
 import { ProductGridSkeleton, SkeletonBlock } from '../../components/common/Skeleton.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
@@ -19,6 +19,11 @@ export default function Home() {
   const featuredQuery = useQuery({
     queryKey: ['featuredProducts'],
     queryFn: productApi.getFeaturedProducts,
+  });
+
+  const newArrivalsQuery = useQuery({
+    queryKey: ['products', 'homeNewArrivals'],
+    queryFn: () => productApi.listProducts({ sort: 'newest', limit: 8 }),
   });
 
   // No dedicated "deals" endpoint exists in the product API — pull a
@@ -47,40 +52,49 @@ export default function Home() {
     0
   );
 
+  // First real product photo available, used as the hero's dim backdrop
+  // (see HeroCarousel) — never a stock or generated image, and the hero
+  // falls back to its illustrated pendant if nothing is available yet.
+  const heroImage =
+    featuredQuery.data?.find((p) => p.images?.some((img) => img.imageUrl))
+      ?.images?.find((img) => img.isPrimary)?.imageUrl ??
+    featuredQuery.data?.[0]?.images?.[0]?.imageUrl;
+
   return (
     <div>
-      <HeroCarousel categoryCount={categoryCount} />
+      <HeroCarousel categoryCount={categoryCount} heroImage={heroImage} />
 
-      <section className="mx-auto max-w-7xl px-4 pt-16 pb-4 sm:px-6 lg:px-8">
+      <div className="pt-8">
+        <WhyShopSection />
+      </div>
+
+      <section id="categories" className="mx-auto max-w-7xl px-4 pt-14 pb-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-2xl font-700 text-cream">Shop by category</h2>
           <Link to="/products" className="text-sm font-medium text-gold hover:underline">
-            View all products
+            View all
           </Link>
         </div>
 
         {categoriesQuery.isLoading && (
-          <div className="mt-6 grid grid-cols-1 gap-px border border-ink-600 bg-ink-600 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="mt-6 flex gap-5 overflow-x-auto pb-2">
+            {Array.from({ length: 6 }).map((_, i) => (
               // eslint-disable-next-line react/no-array-index-key
-              <SkeletonBlock key={i} className="min-h-[230px] w-full" />
+              <SkeletonBlock key={i} className="h-20 w-20 shrink-0 rounded-full sm:h-24 sm:w-24" />
             ))}
           </div>
         )}
 
         {categoriesQuery.isError && (
           <div className="mt-6">
-            <ErrorState
-              message={categoriesQuery.error?.message}
-              onRetry={categoriesQuery.refetch}
-            />
+            <ErrorState message={categoriesQuery.error?.message} onRetry={categoriesQuery.refetch} />
           </div>
         )}
 
         {categoriesQuery.data && categoriesQuery.data.length > 0 && (
-          <div className="mt-6 grid grid-cols-1 gap-px border border-ink-600 bg-ink-600 sm:grid-cols-2 lg:grid-cols-4">
-            {categoriesQuery.data.map((category, index) => (
-              <CategoryCard key={category.id} category={category} index={index} />
+          <div className="mt-6 flex gap-5 overflow-x-auto pb-2 sm:gap-7">
+            {categoriesQuery.data.map((category) => (
+              <CategoryTile key={category.id} category={category} />
             ))}
           </div>
         )}
@@ -90,31 +104,11 @@ export default function Home() {
         )}
       </section>
 
-      {/* Hot Deals — only rendered once real discounted products exist,
-          so the section never shows an awkward "no products" empty state */}
-      {dealsProducts.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pt-12 pb-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between">
-            <h2 className="font-display text-2xl font-700 text-cream">🔥 Hot Deals</h2>
-            <Link to="/products" className="text-sm font-medium text-gold hover:underline">
-              See all
-            </Link>
-          </div>
-          <div className="mt-6">
-            <ProductGrid products={dealsProducts} />
-          </div>
-        </section>
-      )}
-
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <PromoBanners maxDiscountPercent={maxDiscountPercent} />
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 pt-12 pb-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-2xl font-700 text-cream">Featured products</h2>
           <Link to="/products" className="text-sm font-medium text-gold hover:underline">
-            See all
+            View all
           </Link>
         </div>
         <div className="mt-6">
@@ -131,6 +125,47 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <PromoBanners maxDiscountPercent={maxDiscountPercent} />
+      </section>
+
+      {/* Hot Deals — only rendered once real discounted products exist,
+          so the section never shows an awkward "no products" empty state */}
+      {dealsProducts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pt-4 pb-4 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-display text-2xl font-700 text-cream">🔥 Hot Deals</h2>
+            <Link to="/products" className="text-sm font-medium text-gold hover:underline">
+              See all
+            </Link>
+          </div>
+          <div className="mt-6">
+            <ProductGrid products={dealsProducts} />
+          </div>
+        </section>
+      )}
+
+      <section className="mx-auto max-w-7xl px-4 pt-4 pb-16 sm:px-6 lg:px-8">
+        <div className="flex items-baseline justify-between">
+          <h2 className="font-display text-2xl font-700 text-cream">New Arrivals</h2>
+          <Link to="/products?sort=newest" className="text-sm font-medium text-gold hover:underline">
+            View all
+          </Link>
+        </div>
+        <div className="mt-6">
+          {newArrivalsQuery.isLoading && <ProductGridSkeleton count={8} />}
+          {newArrivalsQuery.isError && (
+            <ErrorState message={newArrivalsQuery.error?.message} onRetry={newArrivalsQuery.refetch} />
+          )}
+          {newArrivalsQuery.data?.items && newArrivalsQuery.data.items.length > 0 && (
+            <ProductGrid products={newArrivalsQuery.data.items} />
+          )}
+          {newArrivalsQuery.data?.items && newArrivalsQuery.data.items.length === 0 && (
+            <p className="text-sm text-ink-100">No new arrivals yet — check back soon.</p>
+          )}
+        </div>
+      </section>
+
       <div className="border-t border-ink-600 bg-ink-600/40 py-10 text-center">
         <p className="mx-auto max-w-2xl px-4 text-ink-100 sm:px-6 lg:px-8">
           Every category icon on this site is drawn, not photographed — and every one lights
@@ -139,10 +174,6 @@ export default function Home() {
             Hover a category. Watch it light.
           </span>
         </p>
-      </div>
-
-      <div className="border-t border-ink-600">
-        <WhyShopSection />
       </div>
     </div>
   );

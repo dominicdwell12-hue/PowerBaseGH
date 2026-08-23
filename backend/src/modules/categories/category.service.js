@@ -25,11 +25,26 @@ async function generateUniqueSlug(name) {
 async function listCategories() {
   // Return top-level categories with their children nested, so the
   // frontend can render a category menu/tree in a single request.
-  return prisma.category.findMany({
+  // Also include each category's/child's real product count (`_count`)
+  // so the storefront can show "N items" without inventing a number —
+  // purely additive to the existing response shape, nothing removed.
+  const categories = await prisma.category.findMany({
     where: { isActive: true, parentId: null },
-    include: { children: { where: { isActive: true } } },
+    include: {
+      children: { where: { isActive: true }, include: { _count: { select: { products: true } } } },
+      _count: { select: { products: true } },
+    },
     orderBy: { name: 'asc' },
   });
+
+  return categories.map(({ _count, children, ...category }) => ({
+    ...category,
+    productCount: _count.products,
+    children: children.map(({ _count: childCount, ...child }) => ({
+      ...child,
+      productCount: childCount.products,
+    })),
+  }));
 }
 
 async function getCategoryWithProducts(slug, { page = 1, limit = 20 } = {}) {

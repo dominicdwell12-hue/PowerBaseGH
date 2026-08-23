@@ -60,17 +60,17 @@ export default function PaymentCallback() {
     <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
       {state.status === 'success' ? (
         <>
-          <p className="font-tag text-xs uppercase tracking-wide text-forest-600">Payment received</p>
-          <h1 className="mt-2 font-display text-2xl font-800 text-ink-900">Thank you!</h1>
-          <p className="mt-2 text-ash">Your payment went through and your order is confirmed.</p>
+          <p className="font-tag text-xs uppercase tracking-wide text-forest-400">Payment received</p>
+          <h1 className="mt-2 font-display text-2xl font-800 text-cream">Thank you!</h1>
+          <p className="mt-2 text-ink-100">Your payment went through and your order is confirmed.</p>
         </>
       ) : (
         <>
-          <p className="font-tag text-xs uppercase tracking-wide text-brick-600">Payment not confirmed</p>
-          <h1 className="mt-2 font-display text-2xl font-800 text-ink-900">
+          <p className="font-tag text-xs uppercase tracking-wide text-brick-400">Payment not confirmed</p>
+          <h1 className="mt-2 font-display text-2xl font-800 text-cream">
             {state.status === 'failed' ? 'Payment unsuccessful' : "Couldn't confirm payment"}
           </h1>
-          <p className="mt-2 text-ash">
+          <p className="mt-2 text-ink-100">
             {state.message ?? 'Something went wrong confirming this payment.'} If you were charged, your order will
             still update automatically once the payment provider notifies us — check order tracking shortly.
           </p>

@@ -14,7 +14,7 @@ export default function PriceTag({ price, compareAtPrice, size = 'md' }) {
     <span className="inline-flex items-center gap-2">
       <span className={`price-tag ${textSize}`}>{formatCurrency(price)}</span>
       {hasDiscount && (
-        <span className="font-tag text-xs text-ash line-through">
+        <span className="font-tag text-xs text-ink-100 line-through">
           {formatCurrency(compareAtPrice)}
         </span>
       )}

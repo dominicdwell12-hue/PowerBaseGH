@@ -32,7 +32,7 @@ export default function AddressForm({ zones, onSubmit, onCancel, isSubmitting, i
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-3 rounded-xl border border-ink-50 bg-white p-4">
+    <form onSubmit={handleSubmit} className="mt-4 space-y-3 rounded-xl border border-ink-600 bg-ink-600 p-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <FormField label="Recipient name" htmlFor="recipientName">
           <input
@@ -89,12 +89,12 @@ export default function AddressForm({ zones, onSubmit, onCancel, isSubmitting, i
         </FormField>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-ink-900">
+      <label className="flex items-center gap-2 text-sm text-cream">
         <input type="checkbox" checked={form.isDefault} onChange={set('isDefault')} />
         Set as default address
       </label>
 
-      {error && <p className="text-sm text-brick-600">{error}</p>}
+      {error && <p className="text-sm text-brick-400">{error}</p>}
 
       <div className="flex gap-2 pt-1">
         <Button type="submit" disabled={isSubmitting}>

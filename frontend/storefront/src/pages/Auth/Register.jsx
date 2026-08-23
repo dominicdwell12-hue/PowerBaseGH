@@ -31,7 +31,7 @@ export default function Register() {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-16 sm:px-6">
-      <h1 className="font-display text-2xl font-800 text-ink-900">Create an account</h1>
+      <h1 className="font-display text-2xl font-800 text-cream">Create an account</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
@@ -59,16 +59,16 @@ export default function Register() {
             onChange={set('password')}
           />
         </FormField>
-        <p className="text-xs text-ash">At least 8 characters, with one uppercase letter and one number.</p>
+        <p className="text-xs text-ink-100">At least 8 characters, with one uppercase letter and one number.</p>
 
-        {error && <p className="text-sm text-brick-600">{error}</p>}
+        {error && <p className="text-sm text-brick-400">{error}</p>}
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? 'Creating account…' : 'Create account'}
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-ash">
+      <p className="mt-4 text-center text-sm text-ink-100">
         Already have an account?{' '}
         <Link to="/login" className="font-medium text-gold-700 hover:underline">
           Sign in

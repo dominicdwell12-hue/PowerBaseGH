@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ImageOff } from 'lucide-react';
+import { ImageOff, ChevronRight, Heart } from 'lucide-react';
 import PriceTag from '../../components/common/PriceTag.jsx';
 import Button from '../../components/common/Button.jsx';
 import QuantityStepper from '../../components/common/QuantityStepper.jsx';
@@ -97,10 +97,26 @@ export default function ProductDetails() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="grid gap-8 md:grid-cols-2">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-ink-100">
+        <Link to="/" className="hover:text-gold">Home</Link>
+        <ChevronRight size={12} aria-hidden="true" />
+        <Link to="/products" className="hover:text-gold">Shop</Link>
+        {product.category?.name && (
+          <>
+            <ChevronRight size={12} aria-hidden="true" />
+            <Link to={`/products?category=${product.category?.slug}`} className="hover:text-gold">
+              {product.category.name}
+            </Link>
+          </>
+        )}
+        <ChevronRight size={12} aria-hidden="true" />
+        <span className="line-clamp-1 text-cream">{product.name}</span>
+      </nav>
+
+      <div className="mt-6 grid gap-8 md:grid-cols-2">
         <div>
-          <div className="aspect-square overflow-hidden rounded-xl bg-ink-50">
+          <div className="aspect-square overflow-hidden rounded-xl bg-ink-400/20">
             <ImageWithFallback
               src={images[activeImage]?.imageUrl}
               alt={product.name}
@@ -138,8 +154,8 @@ export default function ProductDetails() {
           >
             {product.category?.name}
           </Link>
-          <h1 className="mt-1 font-display text-2xl font-800 text-ink-900">{product.name}</h1>
-          {product.brand && <p className="mt-1 text-sm text-ash">Brand: {product.brand}</p>}
+          <h1 className="mt-1 font-display text-2xl font-800 text-cream">{product.name}</h1>
+          {product.brand && <p className="mt-1 text-sm text-ink-100">Brand: {product.brand}</p>}
 
           <div className="mt-4">
             <PriceTag
@@ -151,17 +167,17 @@ export default function ProductDetails() {
 
           <p className="mt-2 text-sm">
             {outOfStock ? (
-              <span className="font-semibold text-brick-600">Out of stock</span>
+              <span className="font-semibold text-brick-400">Out of stock</span>
             ) : product.stockQuantity <= 5 ? (
-              <span className="font-semibold text-brick-600">
+              <span className="font-semibold text-brick-400">
                 Only {product.stockQuantity} left in stock
               </span>
             ) : (
-              <span className="font-semibold text-forest-600">In stock</span>
+              <span className="font-semibold text-forest-400">In stock</span>
             )}
           </p>
 
-          <p className="mt-4 whitespace-pre-line text-sm text-ink-900">{product.description}</p>
+          <p className="mt-4 whitespace-pre-line text-sm text-cream">{product.description}</p>
 
           <div className="mt-6 flex items-center gap-4">
             <QuantityStepper
@@ -174,6 +190,7 @@ export default function ProductDetails() {
               {isAdding ? 'Adding…' : 'Add to cart'}
             </Button>
             <Button variant="outline" onClick={handleAddToWishlist} disabled={inWishlist}>
+              <Heart size={15} aria-hidden="true" fill={inWishlist ? 'currentColor' : 'none'} className={inWishlist ? 'text-magenta' : ''} />
               {inWishlist ? 'In wishlist' : 'Add to wishlist'}
             </Button>
           </div>
@@ -181,7 +198,7 @@ export default function ProductDetails() {
           {feedback && (
             <p
               className={`mt-3 text-sm ${
-                feedback.type === 'success' ? 'text-forest-600' : 'text-brick-600'
+                feedback.type === 'success' ? 'text-forest-400' : 'text-brick-400'
               }`}
               role="status"
             >
@@ -192,7 +209,7 @@ export default function ProductDetails() {
       </div>
 
       <section className="mt-16">
-        <h2 className="font-display text-xl font-700 text-ink-900">You may also like</h2>
+        <h2 className="font-display text-xl font-700 text-cream">You may also like</h2>
         <div className="mt-6">
           {relatedQuery.isLoading && <Spinner label="Loading related products" />}
           {relatedQuery.data && <ProductGrid products={relatedQuery.data} />}

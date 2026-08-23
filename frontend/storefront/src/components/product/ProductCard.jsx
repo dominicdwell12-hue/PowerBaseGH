@@ -57,7 +57,7 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/products/${product.slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-ink-600
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-ink-600
         bg-ink-600 transition-all hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_8px_30px_-12px_rgba(201,138,44,0.4)]
         focus-visible:-translate-y-0.5"
     >
@@ -72,8 +72,8 @@ export default function ProductCard({ product }) {
 
         {hasDiscount && (
           <span
-            className="absolute left-2 top-2 rounded-full bg-magenta px-2.5 py-1
-              text-xs font-semibold text-cream"
+            className="absolute left-2 top-2 rounded-md bg-gold px-2 py-0.5
+              text-xs font-bold text-ink-900"
           >
             -{discountPercent}%
           </span>
@@ -105,11 +105,11 @@ export default function ProductCard({ product }) {
             onClick={handleQuickAdd}
             disabled={isAdding}
             aria-label="Add to cart"
-            className="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full
-              bg-gold text-ink-900 opacity-0 shadow-lg transition-opacity
-              group-hover:opacity-100 group-focus-within:opacity-100 disabled:opacity-50 sm:opacity-0"
+            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full
+              border border-gold/60 bg-ink-900/80 text-gold shadow-lg backdrop-blur transition-colors
+              hover:bg-gold hover:text-ink-900 disabled:opacity-50"
           >
-            <Plus size={18} aria-hidden="true" />
+            <Plus size={16} aria-hidden="true" />
           </button>
         )}
       </div>

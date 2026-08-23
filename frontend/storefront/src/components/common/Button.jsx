@@ -1,7 +1,7 @@
 const VARIANTS = {
   primary: 'bg-gold text-ink-900 hover:bg-gold-700 focus-visible:bg-gold-700',
-  secondary: 'bg-ink text-paper hover:bg-ink-600',
-  outline: 'border border-ink-100 text-ink-900 hover:bg-ink-50',
+  secondary: 'bg-ink-600 text-cream hover:bg-ink-400',
+  outline: 'border border-ink-600 text-cream hover:bg-ink-600',
   danger: 'bg-brick text-paper hover:bg-brick-400',
 };
 

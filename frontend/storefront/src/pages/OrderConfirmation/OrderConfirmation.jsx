@@ -30,18 +30,18 @@ export default function OrderConfirmation() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
       <p className="font-tag text-xs uppercase tracking-wide text-gold-700">Order placed</p>
-      <h1 className="mt-2 font-display text-3xl font-800 text-ink-900">Thank you!</h1>
-      <p className="mt-2 text-ash">
-        Your order <span className="font-tag text-ink-900">{order.orderNumber}</span> has been
+      <h1 className="mt-2 font-display text-3xl font-800 text-cream">Thank you!</h1>
+      <p className="mt-2 text-ink-100">
+        Your order <span className="font-tag text-cream">{order.orderNumber}</span> has been
         placed{order.paymentMethod === 'pay_on_delivery' ? ' and will be paid on delivery.' : '.'}
       </p>
 
-      <div className="mt-8 rounded-xl border border-ink-50 bg-white p-5">
+      <div className="mt-8 rounded-xl border border-ink-600 bg-ink-600 p-5">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-ash">Status</span>
+          <span className="text-sm text-ink-100">Status</span>
           <StatusBadge status={order.status} />
         </div>
-        <ul className="mt-4 space-y-1 text-sm text-ash">
+        <ul className="mt-4 space-y-1 text-sm text-ink-100">
           {order.items.map((item) => (
             <li key={item.productId} className="flex justify-between">
               <span>
@@ -51,22 +51,22 @@ export default function OrderConfirmation() {
             </li>
           ))}
         </ul>
-        <div className="mt-4 space-y-1 border-t border-ink-50 pt-3 text-sm">
-          <div className="flex justify-between text-ash">
+        <div className="mt-4 space-y-1 border-t border-ink-600 pt-3 text-sm">
+          <div className="flex justify-between text-ink-100">
             <span>Subtotal</span>
-            <span className="font-tag text-ink-900">{formatCurrency(order.subtotal)}</span>
+            <span className="font-tag text-cream">{formatCurrency(order.subtotal)}</span>
           </div>
-          <div className="flex justify-between text-ash">
+          <div className="flex justify-between text-ink-100">
             <span>Delivery fee</span>
-            <span className="font-tag text-ink-900">{formatCurrency(order.deliveryFee)}</span>
+            <span className="font-tag text-cream">{formatCurrency(order.deliveryFee)}</span>
           </div>
-          <div className="flex justify-between pt-2 text-base font-semibold text-ink-900">
+          <div className="flex justify-between pt-2 text-base font-semibold text-cream">
             <span>Total</span>
             <span className="font-tag">{formatCurrency(order.total)}</span>
           </div>
         </div>
         {order.deliveryZone?.estimatedDays && (
-          <p className="mt-3 text-xs text-ash">
+          <p className="mt-3 text-xs text-ink-100">
             Estimated delivery to {order.deliveryZone.cityName}: {order.deliveryZone.estimatedDays}
           </p>
         )}

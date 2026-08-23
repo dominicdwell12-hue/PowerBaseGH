@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChevronRight } from 'lucide-react';
 import FormField, { inputClass } from '../../components/common/FormField.jsx';
 import Button from '../../components/common/Button.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
@@ -15,8 +16,15 @@ export default function Profile() {
   const queryClient = useQueryClient();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-display text-2xl font-800 text-ink-900">Your account</h1>
+    <div className="mx-auto max-w-3xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
+      <div>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-ink-100">
+          <Link to="/" className="hover:text-gold">Home</Link>
+          <ChevronRight size={12} aria-hidden="true" />
+          <span className="text-cream">Account</span>
+        </nav>
+        <h1 className="mt-2 font-display text-2xl font-800 text-cream sm:text-3xl">Your account</h1>
+      </div>
       <AccountDetailsSection user={user} onSaved={setUser} />
       <ChangePasswordSection onChanged={() => { logout(); navigate('/login'); }} />
       <AddressBookSection queryClient={queryClient} />
@@ -48,14 +56,14 @@ function AccountDetailsSection({ user, onSaved }) {
 
   return (
     <section>
-      <h2 className="font-display text-lg font-700 text-ink-900">Account details</h2>
+      <h2 className="font-display text-lg font-700 text-cream">Account details</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           setStatus(null);
           mutation.mutate(form);
         }}
-        className="mt-3 grid gap-3 rounded-xl border border-ink-50 bg-white p-4 sm:grid-cols-2"
+        className="mt-3 grid gap-3 rounded-xl border border-ink-600 bg-ink-600 p-4 sm:grid-cols-2"
       >
         <FormField label="First name" htmlFor="firstName">
           <input id="firstName" required className={inputClass} value={form.firstName} onChange={set('firstName')} />
@@ -72,7 +80,7 @@ function AccountDetailsSection({ user, onSaved }) {
 
         <div className="sm:col-span-2">
           {status && (
-            <p className={`mb-2 text-sm ${status.type === 'success' ? 'text-forest-600' : 'text-brick-600'}`}>
+            <p className={`mb-2 text-sm ${status.type === 'success' ? 'text-forest-400' : 'text-brick-400'}`}>
               {status.message}
             </p>
           )}
@@ -104,14 +112,14 @@ function ChangePasswordSection({ onChanged }) {
 
   return (
     <section>
-      <h2 className="font-display text-lg font-700 text-ink-900">Change password</h2>
+      <h2 className="font-display text-lg font-700 text-cream">Change password</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           setStatus(null);
           mutation.mutate(form);
         }}
-        className="mt-3 space-y-3 rounded-xl border border-ink-50 bg-white p-4"
+        className="mt-3 space-y-3 rounded-xl border border-ink-600 bg-ink-600 p-4"
       >
         <FormField label="Current password" htmlFor="currentPassword">
           <input
@@ -134,11 +142,11 @@ function ChangePasswordSection({ onChanged }) {
             onChange={set('newPassword')}
           />
         </FormField>
-        <p className="text-xs text-ash">
+        <p className="text-xs text-ink-100">
           At least 8 characters, with one uppercase letter and one number.
         </p>
         {status && (
-          <p className={`text-sm ${status.type === 'success' ? 'text-forest-600' : 'text-brick-600'}`}>
+          <p className={`text-sm ${status.type === 'success' ? 'text-forest-400' : 'text-brick-400'}`}>
             {status.message}
           </p>
         )}
@@ -180,23 +188,23 @@ function AddressBookSection({ queryClient }) {
 
   return (
     <section>
-      <h2 className="font-display text-lg font-700 text-ink-900">Saved addresses</h2>
+      <h2 className="font-display text-lg font-700 text-cream">Saved addresses</h2>
 
       <ul className="mt-3 space-y-2">
         {addressesQuery.data?.map((address) => (
-          <li key={address.id} className="rounded-xl border border-ink-50 bg-white p-4 text-sm">
+          <li key={address.id} className="rounded-xl border border-ink-600 bg-ink-600 p-4 text-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-semibold text-ink-900">
+                <p className="font-semibold text-cream">
                   {address.label ? `${address.label} — ` : ''}
                   {address.recipientName}
                   {address.isDefault && (
-                    <span className="ml-2 rounded-full bg-forest-50 px-2 py-0.5 text-xs text-forest-600">
+                    <span className="ml-2 rounded-full bg-forest-400/20 px-2 py-0.5 text-xs text-forest-400">
                       Default
                     </span>
                   )}
                 </p>
-                <p className="text-ash">
+                <p className="text-ink-100">
                   {address.street}, {address.city.name} · {address.phone}
                 </p>
               </div>
@@ -211,7 +219,7 @@ function AddressBookSection({ queryClient }) {
                 {!address.isDefault && (
                   <button
                     type="button"
-                    className="font-medium text-ash hover:underline"
+                    className="font-medium text-ink-100 hover:underline"
                     onClick={() => setDefaultMutation.mutate(address.id)}
                   >
                     Set as default
@@ -219,7 +227,7 @@ function AddressBookSection({ queryClient }) {
                 )}
                 <button
                   type="button"
-                  className="font-medium text-brick-600 hover:underline"
+                  className="font-medium text-brick-400 hover:underline"
                   onClick={() => deleteMutation.mutate(address.id)}
                 >
                   Delete

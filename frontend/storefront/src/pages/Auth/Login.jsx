@@ -32,7 +32,7 @@ export default function Login() {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-16 sm:px-6">
-      <h1 className="font-display text-2xl font-800 text-ink-900">Sign in</h1>
+      <h1 className="font-display text-2xl font-800 text-cream">Sign in</h1>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <FormField label="Email" htmlFor="email">
@@ -56,14 +56,14 @@ export default function Login() {
           />
         </FormField>
 
-        {error && <p className="text-sm text-brick-600">{error}</p>}
+        {error && <p className="text-sm text-brick-400">{error}</p>}
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-ash">
+      <p className="mt-4 text-center text-sm text-ink-100">
         New here?{' '}
         <Link to="/register" className="font-medium text-gold-700 hover:underline">
           Create an account

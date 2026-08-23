@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChevronRight } from 'lucide-react';
 import Button from '../../components/common/Button.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
@@ -115,8 +116,8 @@ export default function Checkout() {
   if (!items.length) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
-        <h1 className="font-display text-2xl font-800 text-ink-900">Nothing to check out</h1>
-        <p className="mt-3 text-ash">Your cart is empty.</p>
+        <h1 className="font-display text-2xl font-800 text-cream">Nothing to check out</h1>
+        <p className="mt-3 text-ink-100">Your cart is empty.</p>
         <Button className="mt-6" onClick={() => navigate('/products')}>
           Start shopping
         </Button>
@@ -139,16 +140,21 @@ export default function Checkout() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-display text-2xl font-800 text-ink-900">Checkout</h1>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-ink-100">
+        <Link to="/cart" className="hover:text-gold">Cart</Link>
+        <ChevronRight size={12} aria-hidden="true" />
+        <span className="text-cream">Checkout</span>
+      </nav>
+      <h1 className="mt-2 font-display text-2xl font-800 text-cream sm:text-3xl">Checkout</h1>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
           <section>
-            <h2 className="font-display text-lg font-700 text-ink-900">Delivery address</h2>
+            <h2 className="font-display text-lg font-700 text-cream">Delivery address</h2>
 
             {!addressesQuery.data?.length && !showAddressForm && (
-              <p className="mt-2 text-sm text-ash">You don't have any saved addresses yet.</p>
+              <p className="mt-2 text-sm text-ink-100">You don't have any saved addresses yet.</p>
             )}
 
             <div className="mt-3 space-y-2">
@@ -156,7 +162,7 @@ export default function Checkout() {
                 <label
                   key={address.id}
                   className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 ${
-                    selectedAddressId === address.id ? 'border-gold' : 'border-ink-50'
+                    selectedAddressId === address.id ? 'border-gold' : 'border-ink-600'
                   }`}
                 >
                   <input
@@ -167,17 +173,17 @@ export default function Checkout() {
                     onChange={() => setSelectedAddressId(address.id)}
                   />
                   <span className="text-sm">
-                    <span className="font-semibold text-ink-900">
+                    <span className="font-semibold text-cream">
                       {address.label ? `${address.label} — ` : ''}
                       {address.recipientName}
                     </span>
                     {address.isDefault && (
-                      <span className="ml-2 rounded-full bg-forest-50 px-2 py-0.5 text-xs text-forest-600">
+                      <span className="ml-2 rounded-full bg-forest-400/20 px-2 py-0.5 text-xs text-forest-400">
                         Default
                       </span>
                     )}
                     <br />
-                    <span className="text-ash">
+                    <span className="text-ink-100">
                       {address.street}, {address.city.name} · {address.phone}
                     </span>
                   </span>
@@ -204,9 +210,13 @@ export default function Checkout() {
           </section>
 
           <section>
-            <h2 className="font-display text-lg font-700 text-ink-900">Payment method</h2>
+            <h2 className="font-display text-lg font-700 text-cream">Payment method</h2>
             <div className="mt-3 space-y-2">
-              <label className="flex items-center gap-3 rounded-xl border border-ink-50 p-3 text-sm">
+              <label
+                className={`flex items-center gap-3 rounded-xl border p-3 text-sm ${
+                  paymentMethod === 'pay_on_delivery' ? 'border-gold' : 'border-ink-600'
+                } ${!podCheckQuery.data?.payOnDeliveryAvailable ? 'opacity-50' : 'cursor-pointer'}`}
+              >
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -214,16 +224,20 @@ export default function Checkout() {
                   disabled={!podCheckQuery.data?.payOnDeliveryAvailable}
                   onChange={() => setPaymentMethod('pay_on_delivery')}
                 />
-                <span>
+                <span className="text-cream">
                   Pay on Delivery
                   {selectedAddress && !podCheckQuery.data?.payOnDeliveryAvailable && (
-                    <span className="ml-2 text-xs text-ash">
+                    <span className="ml-2 text-xs text-ink-100">
                       (not available in {selectedAddress.city.name} — prepay required)
                     </span>
                   )}
                 </span>
               </label>
-              <label className="flex items-center gap-3 rounded-xl border border-ink-50 p-3 text-sm">
+              <label
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm text-cream ${
+                  paymentMethod === 'card' ? 'border-gold' : 'border-ink-600'
+                }`}
+              >
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -232,7 +246,11 @@ export default function Checkout() {
                 />
                 Card
               </label>
-              <label className="flex items-center gap-3 rounded-xl border border-ink-50 p-3 text-sm">
+              <label
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm text-cream ${
+                  paymentMethod === 'mobile_money' ? 'border-gold' : 'border-ink-600'
+                }`}
+              >
                 <input
                   type="radio"
                   name="paymentMethod"
@@ -245,9 +263,9 @@ export default function Checkout() {
           </section>
         </div>
 
-        <div className="h-fit rounded-xl border border-ink-50 bg-white p-5">
-          <h2 className="font-display text-lg font-700 text-ink-900">Order summary</h2>
-          <ul className="mt-3 space-y-1 text-sm text-ash">
+        <div className="h-fit rounded-xl border border-ink-600 bg-ink-600 p-5">
+          <h2 className="font-display text-lg font-700 text-cream">Order summary</h2>
+          <ul className="mt-3 space-y-1 text-sm text-ink-100">
             {items.map((item) => (
               <li key={item.id} className="flex justify-between">
                 <span>
@@ -257,24 +275,24 @@ export default function Checkout() {
               </li>
             ))}
           </ul>
-          <div className="mt-4 space-y-1 border-t border-ink-50 pt-3 text-sm">
-            <div className="flex justify-between text-ash">
+          <div className="mt-4 space-y-1 border-t border-ink-600 pt-3 text-sm">
+            <div className="flex justify-between text-ink-100">
               <span>Subtotal</span>
-              <span className="font-tag text-ink-900">{formatCurrency(subtotal)}</span>
+              <span className="font-tag text-cream">{formatCurrency(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-ash">
+            <div className="flex justify-between text-ink-100">
               <span>Delivery fee</span>
-              <span className="font-tag text-ink-900">
+              <span className="font-tag text-cream">
                 {selectedAddress ? formatCurrency(deliveryFee) : '—'}
               </span>
             </div>
-            <div className="flex justify-between pt-2 text-base font-semibold text-ink-900">
+            <div className="flex justify-between pt-2 text-base font-semibold text-cream">
               <span>Total</span>
               <span className="font-tag">{formatCurrency(total)}</span>
             </div>
           </div>
 
-          {submitError && <p className="mt-3 text-sm text-brick-600">{submitError}</p>}
+          {submitError && <p className="mt-3 text-sm text-brick-400">{submitError}</p>}
 
           <Button
             className="mt-4 w-full"

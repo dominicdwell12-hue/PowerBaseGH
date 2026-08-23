@@ -4,13 +4,13 @@ export default function QuantityStepper({ value, onChange, min = 1, max = 99, di
   }
 
   return (
-    <div className="inline-flex items-center rounded-lg border border-ink-100">
+    <div className="inline-flex items-center rounded-lg border border-ink-600">
       <button
         type="button"
         disabled={disabled || value <= min}
         onClick={() => onChange(clamp(value - 1))}
         aria-label="Decrease quantity"
-        className="px-3 py-1.5 text-ink-900 disabled:opacity-30"
+        className="px-3 py-1.5 text-cream disabled:opacity-30"
       >
         −
       </button>
@@ -22,7 +22,7 @@ export default function QuantityStepper({ value, onChange, min = 1, max = 99, di
         disabled={disabled || value >= max}
         onClick={() => onChange(clamp(value + 1))}
         aria-label="Increase quantity"
-        className="px-3 py-1.5 text-ink-900 disabled:opacity-30"
+        className="px-3 py-1.5 text-cream disabled:opacity-30"
       >
         +
       </button>
