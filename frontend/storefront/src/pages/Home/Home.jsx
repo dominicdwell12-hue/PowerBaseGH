@@ -60,6 +60,16 @@ export default function Home() {
       ?.images?.find((img) => img.isPrimary)?.imageUrl ??
     featuredQuery.data?.[0]?.images?.[0]?.imageUrl;
 
+  // Same idea for the "every category icon..." banner further down —
+  // a real category photo (top-level or child, whichever has one first),
+  // never a stock image. The banner falls back to a plain dark panel
+  // (no image) if no category has a photo yet.
+  const bannerImage = (categoriesQuery.data ?? []).reduce((found, category) => {
+    if (found) return found;
+    if (category.imageUrl) return category.imageUrl;
+    return category.children?.find((child) => child.imageUrl)?.imageUrl ?? null;
+  }, null);
+
   return (
     <div>
       <HeroCarousel categoryCount={categoryCount} heroImage={heroImage} />
@@ -166,8 +176,23 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="border-t border-ink-600 bg-ink-600/40 py-10 text-center">
-        <p className="mx-auto max-w-2xl px-4 text-ink-100 sm:px-6 lg:px-8">
+      <div className="relative overflow-hidden border-t border-ink-600 bg-ink-600/40 py-14 text-center">
+        {bannerImage && (
+          <>
+            <img
+              src={bannerImage}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover opacity-25"
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-ink-900/80 via-ink-900/85 to-ink-900/95"
+              aria-hidden="true"
+            />
+          </>
+        )}
+        <p className="relative mx-auto max-w-2xl px-4 text-ink-100 sm:px-6 lg:px-8">
           Every category icon on this site is drawn, not photographed — and every one lights
           up.{' '}
           <span className="font-serifAccent italic text-cream">
