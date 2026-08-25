@@ -9,7 +9,6 @@ export default function FormField({ label, error, children, htmlFor }) {
     </div>
   );
 }
-
 export const inputClass =
-  'w-full rounded-lg border border-ink-600 px-3 py-2 text-sm text-cream ' +
-  'placeholder:text-ink-100 focus:border-gold focus:outline-none';
+  'w-full rounded-lg border border-ink-400/40 bg-white px-3 py-2 text-sm text-ink ' +
+  'placeholder:text-ink-400 focus:border-gold focus:outline-none';
