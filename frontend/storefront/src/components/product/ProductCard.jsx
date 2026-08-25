@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Heart, Plus } from 'lucide-react';
 import PriceTag from '../common/PriceTag.jsx';
 import ImageWithFallback from '../common/ImageWithFallback.jsx';
@@ -24,16 +24,25 @@ export default function ProductCard({ product }) {
     : null;
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { addItem, isAdding } = useCart();
   const { productIds, addItem: addWishlistItem, removeItem: removeWishlistItem } = useWishlist();
   const inWishlist = productIds.has(product.id);
 
+  // Same pattern as ProductDetails.jsx's requireAuth(): send a guest to
+  // login WITH the current location attached, so ProtectedRoute-style
+  // "return to where you were" behavior also works from a quick-add on a
+  // card, not just from the full product page.
+  function redirectToLogin() {
+    navigate('/login', { state: { from: location } });
+  }
+
   function handleWishlistClick(e) {
     e.preventDefault();
     e.stopPropagation();
     if (!isAuthenticated) {
-      navigate('/login');
+      redirectToLogin();
       return;
     }
     if (inWishlist) {
@@ -47,7 +56,7 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     if (!isAuthenticated) {
-      navigate('/login');
+      redirectToLogin();
       return;
     }
     if (outOfStock) return;
