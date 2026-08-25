@@ -5,10 +5,22 @@ const { success } = require('../../utils/apiResponse');
 // read it (mitigates XSS token theft). Access token goes in the JSON
 // response body — the frontend keeps it in memory and attaches it to
 // the Authorization header on each request.
+//
+// sameSite must be 'none' in production: the storefront and API live on
+// different subdomains (powerbase-storefront.onrender.com vs
+// powerbasegh.onrender.com), which browsers treat as separate "sites".
+// 'lax' cookies are withheld from cross-site XHR/fetch calls — including
+// the silent refresh this app makes on every page load — so with 'lax'
+// the cookie would round-trip correctly on login but silently fail to
+// be sent back on the very next visit, making every returning user look
+// logged out until they signed in again. 'none' requires 'secure: true',
+// which is fine since production is always served over HTTPS; locally
+// (http://localhost, genuinely same-site) 'lax' still works as before.
+const isProduction = process.env.NODE_ENV === 'production';
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
   path: '/api/v1/auth',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
@@ -55,7 +67,13 @@ async function refresh(req, res, next) {
 async function logout(req, res, next) {
   try {
     await authService.logout(req.user.id);
-    res.clearCookie('refreshToken', { path: '/api/v1/auth' });
+    // Must match the sameSite/secure attributes used when the cookie was
+    // set, or some browsers silently ignore the clear.
+    res.clearCookie('refreshToken', {
+      path: '/api/v1/auth',
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
+    });
     return success(res, { message: 'Logged out' });
   } catch (err) {
     next(err);
