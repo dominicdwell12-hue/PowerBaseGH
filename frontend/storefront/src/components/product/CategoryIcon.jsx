@@ -1,7 +1,7 @@
 import { LIGHTING_CATEGORIES } from '../../data/lightingCategories.js';
 
 /**
- * Hand-drawn line icons for the 23 fixture types PowerBase actually sells,
+ * Hand-drawn line icons for the 23 fixture types Arcvan actually sells,
  * used wherever a category has no real photo yet (CategoryCard, CategoryTile).
  * Replaces the old generic lucide-icon guesser (Smartphone/Shirt/Sofa…),
  * which was a leftover from the multi-category starter template and never

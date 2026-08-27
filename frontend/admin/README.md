@@ -1,4 +1,4 @@
-# PowerBase Gh — Admin Dashboard
+# Arcvan Ghana Limited — Admin Dashboard
 
 Internal dashboard for managing products, categories, orders, customers,
 and delivery zones. See `../../04-api-endpoints.md` for the full API and

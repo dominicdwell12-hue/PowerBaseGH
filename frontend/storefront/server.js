@@ -81,7 +81,7 @@ function withMetaTags(html, { title, description, image, url }) {
     <meta name="description" content="${escapeHtml(description)}" />
     <link rel="canonical" href="${escapeHtml(url)}" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="PowerBase.Gh" />
+    <meta property="og:site_name" content="Arcvan Ghana Limited" />
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description)}" />
     ${image ? `<meta property="og:image" content="${escapeHtml(image)}" />` : ''}
@@ -146,10 +146,10 @@ app.get('/products/:slug', async (req, res, next) => {
     const price = Number(product.price).toFixed(2);
     const description = product.description
       ? product.description.slice(0, 160)
-      : `${product.name} — GH₵${price} at PowerBase.Gh.`;
+      : `${product.name} — GH₵${price} at Arcvan Ghana Limited.`;
 
     const html = withMetaTags(readIndexHtml(), {
-      title: `${product.name} — GH₵${price} | PowerBase.Gh`,
+      title: `${product.name} — GH₵${price} | Arcvan Ghana Limited`,
       description,
       image: bestImage(product) ?? (await getSiteDefaultImage()),
       url: `${SITE_URL}/products/${product.slug}`,
@@ -175,7 +175,7 @@ app.get('*', async (req, res, next) => {
   }
 
   const html = withMetaTags(readIndexHtml(), {
-    title: 'PowerBase.Gh — Lighting & Home Essentials, Delivered Across Ghana',
+    title: 'Arcvan Ghana Limited — Lighting & Home Essentials, Delivered Across Ghana',
     description: SITE_DESCRIPTION,
     image: await getSiteDefaultImage(),
     url: `${SITE_URL}${req.path}`,

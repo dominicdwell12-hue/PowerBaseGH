@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div>
           <p className="font-display text-2xl font-700">
-            PowerBase<span className="text-gold">.</span>Gh
+            Arcvan<span className="text-gold">.</span>GH
           </p>
           <p className="mt-3 max-w-xs text-sm text-ink-100">
             Real products at real prices, delivered across Ghana. Pay on delivery in Kumasi,
@@ -49,7 +49,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-ink-600 px-4 py-4 text-center text-xs text-ink-100 sm:px-6 lg:px-8">
-        © {new Date().getFullYear()} PowerBase Gh.
+        © {new Date().getFullYear()} Arcvan Ghana Limited.
       </div>
     </footer>
   );

@@ -26,11 +26,16 @@ async function main() {
   console.log('Roles seeded');
 
   // 2. Single MVP vendor (multi-vendor ready, unused for now)
+  // NOTE: slug is kept as 'powerbase-gh' intentionally — it's the upsert's
+  // unique lookup key. Changing it would make this upsert CREATE a second
+  // vendor row instead of updating the existing one on any database that
+  // has already been seeded. The display `name` is what's shown in the
+  // app, so that's what carries the new brand.
   await prisma.vendor.upsert({
     where: { slug: 'powerbase-gh' },
-    update: {},
+    update: { name: 'Arcvan Ghana Limited' },
     create: {
-      name: 'PowerBase Gh',
+      name: 'Arcvan Ghana Limited',
       slug: 'powerbase-gh',
       status: 'active',
     },
@@ -38,12 +43,17 @@ async function main() {
   console.log('Default vendor seeded');
 
   // 3. Admin account — change this password immediately after first login.
+  // NOTE: email is kept as 'admin@powerbase.gh' intentionally — it's the
+  // upsert's unique lookup key. Changing it would create a second admin
+  // account instead of matching the one already seeded on an existing
+  // database. Rename this (and update the login credentials you use) once
+  // you're ready to migrate off the old address.
   const adminPasswordHash = await bcrypt.hash('ChangeMe123!', 10);
   await prisma.user.upsert({
     where: { email: 'admin@powerbase.gh' },
     update: {},
     create: {
-      firstName: 'PowerBase',
+      firstName: 'Arcvan',
       lastName: 'Admin',
       email: 'admin@powerbase.gh',
       passwordHash: adminPasswordHash,

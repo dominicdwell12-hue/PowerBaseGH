@@ -38,7 +38,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-ink-600 bg-ink-900/95 backdrop-blur text-cream">
       <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="shrink-0 font-display text-xl font-800 tracking-tight">
-          PowerBase<span className="text-gold">.</span>Gh
+          Arcvan<span className="text-gold">.</span>GH
         </Link>
 
         <form role="search" className="hidden flex-1 sm:flex" onSubmit={submitSearch}>

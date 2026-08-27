@@ -33,11 +33,11 @@ async function sendPasswordResetEmail(to, resetUrl) {
   await resend.emails.send({
     from: env.email.from,
     to,
-    subject: 'Reset your PowerBase.Gh password',
+    subject: 'Reset your Arcvan Ghana Limited password',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #14213A;">
         <h2 style="color: #14213A;">Reset your password</h2>
-        <p>We received a request to reset the password for your PowerBase.Gh account.</p>
+        <p>We received a request to reset the password for your Arcvan Ghana Limited account.</p>
         <p>
           <a href="${resetUrl}"
              style="display:inline-block; padding: 12px 24px; background:#C98A2C; color:#14213A;

@@ -1,4 +1,4 @@
-# PowerBase Gh — Storefront
+# Arcvan Ghana Limited — Storefront
 
 Customer-facing React app. See `../../04-api-endpoints.md` for the API this
 app consumes and `../../05-wireframes.md` for screen layouts.

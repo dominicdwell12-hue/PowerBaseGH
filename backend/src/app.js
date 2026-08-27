@@ -48,7 +48,7 @@ app.use(cookieParser());
 app.use(morgan(env.nodeEnv === 'development' ? 'dev' : 'combined'));
 
 // --- Health check (useful for uptime monitors / deployment platforms) ---
-app.get('/health', (req, res) => res.json({ success: true, message: 'PowerBase Gh API is running' }));
+app.get('/health', (req, res) => res.json({ success: true, message: 'Arcvan Ghana Limited API is running' }));
 
 // --- API routes ---
 app.use(`${env.apiBasePath}/auth`, authRoutes);

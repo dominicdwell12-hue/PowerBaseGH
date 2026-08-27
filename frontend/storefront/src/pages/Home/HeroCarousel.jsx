@@ -39,7 +39,7 @@ export default function HeroCarousel({ categoryCount, heroImage }) {
         <div>
           <p className="inline-flex items-center gap-2 font-tag text-xs uppercase tracking-widest text-gold">
             <span className="h-px w-6 bg-gold" aria-hidden="true" />
-            {categoryCount > 0 ? `${categoryCount} ways to shop PowerBase` : 'PowerBase Gh'}
+            {categoryCount > 0 ? `${categoryCount} ways to shop Arcvan` : 'Arcvan Ghana Limited'}
           </p>
           <h1 className="mt-4 max-w-xl font-display text-4xl font-800 leading-[1.08] sm:text-5xl lg:text-6xl">
             Premium picks for{' '}

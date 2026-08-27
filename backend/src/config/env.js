@@ -35,7 +35,7 @@ module.exports = {
 
   email: {
     resendApiKey: process.env.RESEND_API_KEY,
-    from: process.env.EMAIL_FROM || 'PowerBase.Gh <onboarding@resend.dev>',
+    from: process.env.EMAIL_FROM || 'Arcvan Ghana Limited <onboarding@resend.dev>',
   },
 
   // Where the storefront's reset-password page lives. The backend never

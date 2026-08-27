@@ -4,11 +4,11 @@ const prisma = require('../../config/database');
 const AppError = require('../../utils/AppError');
 
 // Uploads a single in-memory buffer (from multer) to Cloudinary, in the
-// powerbase-gh/products folder, returning the secure URL + public_id.
+// arcvan-gh/products folder, returning the secure URL + public_id.
 function uploadBufferToCloudinary(buffer) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: 'powerbase-gh/products', resource_type: 'image' },
+      { folder: 'arcvan-gh/products', resource_type: 'image' },
       (err, result) => {
         if (err) return reject(err);
         resolve(result);

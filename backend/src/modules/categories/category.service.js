@@ -3,7 +3,7 @@ const cloudinary = require('../../config/cloudinary');
 const { uploadBufferToCloudinary } = require('../../utils/cloudinaryUpload');
 const AppError = require('../../utils/AppError');
 
-const CATEGORY_IMAGE_FOLDER = 'powerbase-gh/categories';
+const CATEGORY_IMAGE_FOLDER = 'arcvan-gh/categories';
 
 function slugify(text) {
   return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');

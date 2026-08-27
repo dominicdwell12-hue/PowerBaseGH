@@ -28,8 +28,8 @@ export default function Support() {
           <h2 className="font-display text-lg font-700 text-cream">Contact us</h2>
           <p className="mt-1 text-sm text-ink-100">
             Reach us at{' '}
-            <a href="mailto:support@powerbase.gh" className="text-gold-700 hover:underline">
-              support@powerbase.gh
+            <a href="mailto:support@arcvangh.com" className="text-gold-700 hover:underline">
+              support@arcvangh.com
             </a>{' '}
             for anything not covered here.
           </p>

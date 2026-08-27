@@ -33,7 +33,7 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-ink px-4">
       <div className="w-full max-w-sm rounded-xl bg-white p-6">
         <p className="font-display text-lg font-800 text-ink-900">
-          PowerBase<span className="text-gold-700">.</span>Gh
+          Arcvan<span className="text-gold-700">.</span>GH
           <span className="ml-2 font-tag text-xs font-normal text-ash">Admin</span>
         </p>
         <h1 className="mt-4 font-display text-xl font-700 text-ink-900">Sign in</h1>

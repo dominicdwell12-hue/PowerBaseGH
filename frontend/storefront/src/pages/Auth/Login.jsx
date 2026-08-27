@@ -79,7 +79,7 @@ export default function Login() {
     <div className="mx-auto max-w-sm px-4 py-16 sm:px-6">
       <div className="text-center">
         <p className="font-display text-xl font-800 text-cream">
-          PowerBase<span className="text-gold">.</span>Gh
+          Arcvan<span className="text-gold">.</span>GH
         </p>
         <h1 className="mt-4 font-display text-2xl font-800 text-cream">Welcome back</h1>
         <p className="mt-1 text-sm text-ink-100">Sign in to continue to your account.</p>

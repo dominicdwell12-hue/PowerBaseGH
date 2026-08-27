@@ -105,7 +105,7 @@ export default function Register() {
     <div className="mx-auto max-w-sm px-4 py-16 sm:px-6">
       <div className="text-center">
         <p className="font-display text-xl font-800 text-cream">
-          PowerBase<span className="text-gold">.</span>Gh
+          Arcvan<span className="text-gold">.</span>GH
         </p>
         <h1 className="mt-4 font-display text-2xl font-800 text-cream">Create an account</h1>
         <p className="mt-1 text-sm text-ink-100">Join to track orders, save favorites, and checkout faster.</p>

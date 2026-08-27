@@ -1,7 +1,7 @@
 {
-  "name": "powerbase-gh-backend",
+  "name": "arcvan-gh-backend",
   "version": "1.0.0",
-  "description": "PowerBase Gh e-commerce backend API",
+  "description": "Arcvan Ghana Limited e-commerce backend API",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

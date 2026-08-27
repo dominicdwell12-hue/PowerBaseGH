@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // PowerBase Gh design tokens — shared with /frontend/admin's config.
+        // Arcvan Ghana Limited design tokens — shared with /frontend/admin's config.
         // Palette drawn from Ashanti goldweights (gold), cocoa/forest (green),
         // and indigo-dyed cloth (ink) rather than a generic brand orange.
         ink: {

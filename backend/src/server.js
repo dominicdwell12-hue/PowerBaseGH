@@ -3,7 +3,7 @@ const env = require('./config/env');
 const prisma = require('./config/database');
 
 const server = app.listen(env.port, () => {
-  console.log(`PowerBase Gh API running on port ${env.port} [${env.nodeEnv}]`);
+  console.log(`Arcvan Ghana Limited API running on port ${env.port} [${env.nodeEnv}]`);
 });
 
 // Graceful shutdown — close DB connections cleanly on termination signals

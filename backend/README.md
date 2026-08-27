@@ -1,4 +1,4 @@
-# PowerBase Gh — Backend API
+# Arcvan Ghana Limited — Backend API
 
 ## Setup
 
@@ -19,7 +19,7 @@ The API runs at http://localhost:5000/api/v1 by default. Health check: GET /heal
 
 ## Seeded accounts (from `npm run seed`)
 
-- Admin login: admin@powerbase.gh / ChangeMe123! (change this immediately)
+- Admin login: admin@powerbase.gh (identifier unchanged — see seed.js note) / ChangeMe123! (change this immediately)
 - Delivery zones: Kumasi (Pay on Delivery enabled), plus Accra, Tamale, Takoradi, Cape Coast (prepay only)
 
 ## Implemented so far (Step 6, features 1-2 of many)

@@ -1,11 +1,11 @@
-// The 23 lighting fixture types PowerBase Gh actually stocks (see
+// The 23 lighting fixture types Arcvan Ghana Limited actually stocks (see
 // /Items in the shared drive — chandeliers, pendants, floor lamps, strip
 // lights, etc.). Categories still come from the live API (categoryApi.js) —
 // this file is NOT a data source for the storefront. It exists so
 // CategoryIcon.jsx has one canonical list to match an API category's
 // `name` against, instead of scattering keyword regexes across
 // components. Grouped by how a shopper actually decides ("what part of
-// the room"), matching the four sections PowerBase's category filters
+// the room"), matching the four sections Arcvan's category filters
 // should eventually expose.
 //
 // If/when these are seeded as real categories in the admin dashboard,
