@@ -1,6 +1,7 @@
 // Seeds the minimum data the app needs to function on a fresh database:
-// roles, the single MVP vendor, an admin account, and delivery zones
-// (with Kumasi flagged for Pay-on-Delivery per the business rules).
+// roles, an admin account, and delivery zones (with Kumasi flagged for
+// Pay-on-Delivery per the business rules). This is a single-store platform
+// for Arcvan Ghana Limited — there is no vendor/seller concept.
 //
 // Run with: npm run seed
 
@@ -25,24 +26,7 @@ async function main() {
   });
   console.log('Roles seeded');
 
-  // 2. Single MVP vendor (multi-vendor ready, unused for now)
-  // NOTE: slug is kept as 'powerbase-gh' intentionally — it's the upsert's
-  // unique lookup key. Changing it would make this upsert CREATE a second
-  // vendor row instead of updating the existing one on any database that
-  // has already been seeded. The display `name` is what's shown in the
-  // app, so that's what carries the new brand.
-  await prisma.vendor.upsert({
-    where: { slug: 'powerbase-gh' },
-    update: { name: 'Arcvan Ghana Limited' },
-    create: {
-      name: 'Arcvan Ghana Limited',
-      slug: 'powerbase-gh',
-      status: 'active',
-    },
-  });
-  console.log('Default vendor seeded');
-
-  // 3. Admin account — change this password immediately after first login.
+  // 2. Admin account — change this password immediately after first login.
   // NOTE: email is kept as 'admin@powerbase.gh' intentionally — it's the
   // upsert's unique lookup key. Changing it would create a second admin
   // account instead of matching the one already seeded on an existing
@@ -63,7 +47,7 @@ async function main() {
   });
   console.log('Admin account seeded (email: admin@powerbase.gh / password: ChangeMe123!)');
 
-  // 4. Delivery zones — Kumasi is the only Pay-on-Delivery city per the
+  // 3. Delivery zones — Kumasi is the only Pay-on-Delivery city per the
   // business rules; every other city requires prepayment.
   const zones = [
     { cityName: 'Kumasi', region: 'Ashanti', payOnDeliveryEnabled: true, deliveryFee: 15.0, estimatedDays: '1-2 days' },
@@ -82,7 +66,7 @@ async function main() {
   }
   console.log('Delivery zones seeded (Kumasi = Pay on Delivery enabled)');
 
-  // 5. Lighting catalog — the real taxonomy (see
+  // 4. Lighting catalog — the real taxonomy (see
   // frontend/storefront/src/data/lightingCategories.js, which this must be
   // kept in sync with). Modeled as 4 parent categories the storefront can
   // browse by "part of the room", each with its real fixture types as
@@ -150,7 +134,7 @@ async function main() {
   }
   console.log('Lighting categories seeded (4 groups, 23 fixture types)');
 
-  // 6. Starter products — real fixtures the business is actually sourcing,
+  // 5. Starter products — real fixtures the business is actually sourcing,
   // priced from supplier quotes on file (GHS). Deliberately shipped with NO
   // ProductImage rows: the reference photos for these are wholesaler/
   // marketplace catalog images (visible third-party watermarks, foreign
@@ -242,7 +226,6 @@ async function main() {
         name: p.name,
         slug: slugify(p.name),
         categoryId: category.id,
-        vendorId: 1,
         price: p.price,
         sku: p.sku,
         brand: p.brand,

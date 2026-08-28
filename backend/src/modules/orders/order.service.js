@@ -140,7 +140,6 @@ async function createOrder(userId, { addressId, paymentMethod }) {
 
       return {
         productId: item.product.id,
-        vendorId: item.product.vendorId,
         productNameSnapshot: item.product.name,
         unitPrice,
         quantity: item.quantity,
@@ -288,14 +287,13 @@ const orderIncludeWithUser = {
   ...orderInclude,
   user: true,
   payments: { orderBy: { createdAt: 'asc' } },
-  items: { include: { vendor: { select: { name: true } } } },
 };
 
-// Admin sees everything: vendor per line item and full payment detail
-// (provider, reference, method, amount, status, paidAt). This is a
-// separate function from serializeOrder() rather than a role flag on it,
-// so there's no risk of a missed check leaking vendor/payment internals
-// into a customer-facing response — the two shapes are built independently.
+// Admin sees everything: full payment detail (provider, reference, method,
+// amount, status, paidAt). This is a separate function from serializeOrder()
+// rather than a role flag on it, so there's no risk of a missed check
+// leaking payment internals into a customer-facing response — the two
+// shapes are built independently.
 function serializeOrderForAdmin(order) {
   return {
     ...serializeOrder(order),
@@ -305,7 +303,6 @@ function serializeOrderForAdmin(order) {
       unitPrice: Number(item.unitPrice),
       quantity: item.quantity,
       lineTotal: Number(item.lineTotal),
-      vendor: item.vendor ? { name: item.vendor.name } : undefined,
     })),
     payments: order.payments?.map((p) => ({
       provider: p.provider,

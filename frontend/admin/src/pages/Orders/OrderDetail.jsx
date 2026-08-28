@@ -81,7 +81,6 @@ export default function OrderDetail() {
             <li key={item.productId} className="flex justify-between">
               <span>
                 {item.name} × {item.quantity}
-                {item.vendor?.name ? <span className="text-ash/70"> · {item.vendor.name}</span> : null}
               </span>
               <span className="font-tag">{formatCurrency(item.lineTotal)}</span>
             </li>

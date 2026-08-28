@@ -80,7 +80,7 @@ async function listProducts({ category, search, minPrice, maxPrice, sort, page, 
 async function getProductBySlug(slug) {
   const product = await prisma.product.findFirst({
     where: { slug, isActive: true, deletedAt: null },
-    include: { images: { orderBy: { sortOrder: 'asc' } }, category: true, vendor: true },
+    include: { images: { orderBy: { sortOrder: 'asc' } }, category: true },
   });
 
   if (!product) {
