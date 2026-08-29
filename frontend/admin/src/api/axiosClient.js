@@ -73,7 +73,10 @@ axiosClient.interceptors.response.use(
     const status = error.response?.status;
     const url = originalRequest.url || '';
     const isAuthFlowRequest =
-      url.includes('/auth/login') || url.includes('/auth/register') || url.includes('/auth/refresh');
+      url.includes('/auth/login') ||
+      url.includes('/auth/admin/login') ||
+      url.includes('/auth/register') ||
+      url.includes('/auth/refresh');
 
     if (status === 401 && !originalRequest._retried && !isAuthFlowRequest) {
       originalRequest._retried = true;
